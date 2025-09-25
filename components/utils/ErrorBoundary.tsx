@@ -10,20 +10,25 @@ interface Props {
 
 interface State {
     hasError: boolean;
+    error?: Error | null;
+    errorInfo?: ErrorInfo | null;
 }
 
 export class ErrorBoundary extends Component<Props, State> {
     public state: State = {
-        hasError: false
+        hasError: false,
+        error: null,
+        errorInfo: null
     };
 
     public static getDerivedStateFromError(_: Error): State {
-        // Update state so the next render will show the fallback UI.
-        return { hasError: true };
+    // Update state so the next render will show the fallback UI.
+    return { hasError: true, error: _, errorInfo: null };
     }
 
     public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-        console.error("Uncaught error in React component:", error, errorInfo);
+    console.error("Uncaught error in React component:", error, errorInfo);
+    this.setState({ error, errorInfo });
     }
 
     private handleReload = () => {
@@ -34,11 +39,15 @@ export class ErrorBoundary extends Component<Props, State> {
         if (this.state.hasError) {
             return (
                 <div style={styles.container}>
-                    <h1 style={styles.title}>Rất tiếc, đã có lỗi xảy ra.</h1>
+                    <h1 style={styles.title}>Đã xảy ra lỗi!</h1>
                     <p style={styles.message}>
-                        Đã xảy ra lỗi trong giao diện người dùng khiến ứng dụng không thể tiếp tục.
-                        Vui lòng thử tải lại trang.
+                        {this.state.error?.message || 'Không rõ lỗi.'}
                     </p>
+                    {this.state.errorInfo && (
+                        <details style={{ whiteSpace: 'pre-wrap', color: '#F5A623', marginBottom: '1rem', textAlign: 'left', maxWidth: 600, margin: '0 auto' }}>
+                            {this.state.errorInfo.componentStack}
+                        </details>
+                    )}
                     <button onClick={this.handleReload} style={styles.button}>
                         Tải lại trang
                     </button>

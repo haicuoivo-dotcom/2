@@ -1,16 +1,35 @@
+/* Ẩn nút tăng giảm của input number */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+input[type="number"] {
+    -moz-appearance: textfield;
+    appearance: textfield;
+}
 /**
  * @license
  * SPDX-License-Identifier: Apache-2.0
 */
 
 .data-cleanup-modal {
-    max-width: var(--modal-width-xl);
+    width: 100vw;
+    height: 100vh;
+    max-width: none;
+    max-height: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 9999;
+    background: rgba(var(--rgb-bg-primary), 0.98);
 }
 
 .data-cleanup-modal .modal-body {
     padding: 0;
     display: flex;
     flex-direction: column;
+    height: 100%;
 }
 
 .cleanup-description {
@@ -26,8 +45,9 @@
     display: grid;
     grid-template-columns: 200px 1fr;
     flex-grow: 1;
-    min-height: 400px;
-    overflow: hidden;
+    height: 100%;
+    min-height: 0;
+    overflow: auto;
 }
 
 /* Re-using kb-tabs style */
@@ -104,9 +124,20 @@
     font-size: 0.9rem;
     cursor: pointer;
     color: var(--text-secondary);
+    min-width: 90px;
+    padding-right: 8px;
 }
 
 .cleanup-filters label:hover {
+    color: var(--text-primary);
+    width: 60px;
+    min-width: 50px;
+    box-sizing: border-box;
+    padding: 4px 8px;
+    font-size: 1rem;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-primary);
+    background: var(--bg-primary);
     color: var(--text-primary);
 }
 

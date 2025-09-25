@@ -165,7 +165,6 @@ const AppContentWrapper = () => {
             sessionStorage.removeItem('reloadedFromStatefulView'); 
             if (currentView !== 'menu') {
                 navigate('menu');
-                rawAddToast('Để tránh mất dữ liệu, bạn đã được đưa về Menu Chính sau khi tải lại trang.', 'info');
                 return () => window.removeEventListener('beforeunload', handleBeforeUnload);
             }
         }

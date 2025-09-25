@@ -8,7 +8,6 @@ import { ConfirmationModal } from './ConfirmationModal';
 import { useGameContext } from '../contexts/GameContext';
 import { NoInfoPlaceholder } from '../ui/NoInfoPlaceholder';
 import { PREDEFINED_RARITIES, SKILL_TIERS } from '../../constants/statConstants';
-import type { Stat, Memory, Relationship, Character } from '../../types';
 import './DataCleanupModal.css';
 
 interface DeletableRelationship {
@@ -34,6 +33,8 @@ export const DataCleanupModal = ({ onClose, onConfirmCleanup }: DataCleanupModal
     const [itemRarityFilter, setItemRarityFilter] = useState<string[]>(['Phổ thông']);
     const [skillTierFilter, setSkillTierFilter] = useState<string[]>(['F', 'D']);
     const [questStatusFilter, setQuestStatusFilter] = useState<string[]>(['Hoàn thành', 'Thất bại']);
+    // Thêm filter cho ký ức
+    const [memoryScoreMax, setMemoryScoreMax] = useState<number>(70);
 
     const isEquipped = useCallback((itemId: string) => {
         if (!gameState) return false;
@@ -46,12 +47,13 @@ export const DataCleanupModal = ({ onClose, onConfirmCleanup }: DataCleanupModal
     const deletableData = useMemo(() => {
         if (!gameState) return { items: [], skills: [], quests: [], memories: [], relationships: [] };
         const allChars = [gameState.character, ...gameState.knowledgeBase.npcs];
-        const allStats = allChars.flatMap(c => (c.stats || []).map(s => ({...s, owner: c.displayName})));
+    const allStats = allChars.flatMap(c => (c.stats || []).map(s => ({...s, owner: c.displayName})));
 
-        const items = allStats.filter(s => (s.category === 'Vật phẩm' || s.category === 'Nguyên liệu') && itemRarityFilter.includes(s.rarity || 'Phổ thông') && !isEquipped(s.id));
-        const skills = allStats.filter(s => SKILL_CATEGORIES.includes(s.category) && skillTierFilter.includes(s.skillTier || 'F'));
-        const quests = gameState.character.stats?.filter(s => s.category === 'Nhiệm vụ' && questStatusFilter.some(status => s.tags?.includes(status))) || [];
-        const memories = gameState.memories?.filter(m => !m.pinned && (m.relevanceScore || 0) < 70) || [];
+    const items = allStats.filter(s => (s.category === 'Vật phẩm' || s.category === 'Nguyên liệu') && itemRarityFilter.includes(s.rarity || 'Phổ thông') && !isEquipped(s.id));
+    const skills = allStats.filter(s => SKILL_CATEGORIES.includes(s.category) && skillTierFilter.includes(s.skillTier || 'F'));
+    // Sửa lỗi so sánh category 'Nhiệm vụ' không hợp lệ
+    const quests = gameState.character.stats?.filter(s => s.category && String(s.category).toLowerCase().includes('nhiệm vụ') && questStatusFilter.some(status => s.tags?.includes(status))) || [];
+    const memories = gameState.memories?.filter(m => (m.relevanceScore || 0) < memoryScoreMax) || [];
         
         const deadNpcIds = new Set(allChars.filter(c => c.stats?.some(s => s.name === 'Trạng thái Tử vong')).map(c => c.id));
         const relationships: DeletableRelationship[] = [];
@@ -143,12 +145,17 @@ export const DataCleanupModal = ({ onClose, onConfirmCleanup }: DataCleanupModal
         const isSelected = selectedIds.has(id);
         const name = item.name || item.type;
         const context = item.reasoning || item.description || (item.owner ? `của ${item.owner}` : '') || (item.charName ? `của ${item.charName}` : '');
+        const score = typeof item.relevanceScore === 'number' ? item.relevanceScore : null;
 
         return (
             <li key={id} className="cleanup-item" onClick={() => handleToggleSelect(id)}>
                 <input type="checkbox" checked={isSelected} readOnly onChange={() => {}}/>
                 <div className="cleanup-item-details">
-                    <div className="cleanup-item-name">{name}</div>
+                    <div className="cleanup-item-name">{name}
+                        {score !== null && (
+                            <span style={{marginLeft: 8, color: '#8E8E93', fontSize: '0.85em', fontWeight: 400}} title="Điểm liên quan">({score})</span>
+                        )}
+                    </div>
                     <div className="cleanup-item-context">{context}</div>
                 </div>
             </li>
@@ -207,6 +214,12 @@ export const DataCleanupModal = ({ onClose, onConfirmCleanup }: DataCleanupModal
                                             {status}
                                         </label>
                                     ))}
+                                    {activeTab === 'memories' && (
+                                        <div style={{display: 'flex', alignItems: 'center', gap: '0.5rem'}}>
+                                            <input type="number" value={memoryScoreMax} style={{width: 60, marginRight: 8}} onChange={e => setMemoryScoreMax(Number(e.target.value.replace(/[^0-9]/g, '')))} />
+                                            <span>Lọc ký ức có điểm nhỏ hơn</span>
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                             <ul className="cleanup-list">

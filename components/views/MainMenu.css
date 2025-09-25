@@ -33,6 +33,7 @@
   background: linear-gradient(60deg, var(--accent-primary), var(--accent-pink), var(--accent-secondary));
   background-size: 200% auto;
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
   animation: title-shine 10s linear infinite;
 }
