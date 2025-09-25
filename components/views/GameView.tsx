@@ -255,8 +255,7 @@ export const GameView = (props: GameViewProps) => {
                     handleCraftItem={gameActions.handleCraftItem}
                     onItemAction={gameActions.handleItemAction}
                     handleCleanupData={gameActions.handleCleanupData}
-                />
-                )}
+                    />
                 {/* Sử dụng settings.showCombatView để kiểm soát hoàn toàn logic CombatView */}
                 {settings.showCombatView && isCombatActive ? (
                     <header className="game-header combat-only-header">
