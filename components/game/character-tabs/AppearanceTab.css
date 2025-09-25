@@ -1,0 +1,92 @@
+/**
+ * @license
+ * SPDX-License-Identifier: Apache-2.0
+*/
+
+.appearance-tab-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 1.5rem;
+}
+
+.appearance-descriptions,
+.wardrobe-section {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.wardrobe-section {
+    background-color: rgba(var(--rgb-bg-tertiary), 0.3);
+    padding: 1.25rem;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-primary);
+}
+
+.wardrobe-section h4 {
+    margin: 0 0 0.5rem;
+    color: var(--text-secondary);
+    border-bottom: 1px solid var(--border-primary);
+    padding-bottom: 0.75rem;
+    font-size: 1.1rem;
+}
+
+.outfit-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0; /* Let group handle spacing */
+    flex-grow: 1;
+    overflow-y: auto;
+    padding-right: 0.5rem;
+    margin-right: -0.5rem;
+}
+
+.outfit-category-group {
+    margin-bottom: 1.5rem;
+}
+
+.outfit-category-group:last-child {
+    margin-bottom: 0;
+}
+
+.outfit-category-title {
+    margin: 0 0 0.75rem;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid rgba(var(--rgb-border-primary), 0.5);
+}
+
+.outfit-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--bg-tertiary);
+    padding: 0.75rem 1rem;
+    border-radius: var(--radius-md);
+    margin-top: 0.5rem;
+}
+
+.outfit-name {
+    font-weight: 500;
+    cursor: help;
+}
+
+.outfit-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.outfit-actions .lore-button {
+    padding: 6px 12px;
+    font-size: 0.85rem;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+    .appearance-tab-grid {
+        grid-template-columns: 1fr;
+    }
+}

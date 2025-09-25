@@ -1,0 +1,104 @@
+/**
+ * @license
+ * SPDX-License-Identifier: Apache-2.0
+*/
+.error-detail-modal {
+    max-width: 650px;
+}
+
+.error-detail-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 1rem;
+}
+
+.error-icon {
+    font-size: 3rem;
+    line-height: 1;
+}
+
+.error-detail-body h4 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: var(--accent-danger);
+}
+
+.error-detail-body p {
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin: 0;
+    max-width: 500px;
+}
+
+.error-process-log {
+    width: 100%;
+    margin-top: 1rem;
+    background-color: var(--bg-tertiary);
+    border: 1px solid var(--border-primary);
+    border-radius: var(--radius-lg);
+    padding: 1rem;
+    text-align: left;
+}
+
+.error-process-log h5 {
+    margin: 0 0 0.75rem;
+    font-size: 1rem;
+    color: var(--text-primary);
+}
+
+.error-process-log .log-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-height: 150px;
+    overflow-y: auto;
+    font-family: monospace;
+    font-size: 0.85rem;
+}
+
+.error-process-log .log-entry {
+    padding: 0.25rem 0.5rem;
+    border-bottom: 1px dashed var(--border-primary);
+    color: var(--text-muted);
+}
+
+.error-process-log .log-entry:last-child {
+    border-bottom: none;
+}
+
+.error-process-log .log-entry.error {
+    color: var(--accent-danger);
+    font-weight: bold;
+}
+
+.tech-details-collapsible {
+    width: 100%;
+    margin-top: 1rem;
+    border: 1px solid var(--border-primary);
+    border-radius: var(--radius-md);
+    background-color: var(--bg-tertiary);
+}
+
+.tech-details-collapsible summary {
+    padding: 0.75rem;
+    font-weight: 500;
+    cursor: pointer;
+    color: var(--text-secondary);
+}
+
+.tech-details-content {
+    padding: 0 1rem 1rem;
+    max-height: 200px;
+    overflow: auto;
+    background-color: rgba(var(--rgb-bg-primary), 0.5);
+}
+
+.tech-details-content pre {
+    text-align: left;
+    white-space: pre-wrap;
+    word-break: break-all;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}

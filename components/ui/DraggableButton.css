@@ -1,0 +1,267 @@
+/**
+ * @license
+ * SPDX-License-Identifier: Apache-2.0
+*/
+
+.draggable-button-container {
+    position: fixed;
+    z-index: 10003; /* Higher than any modal (e.g., inventory tooltip at 10002) */
+}
+
+.draggable-button {
+    width: 60px;
+    height: 60px;
+    background-color: transparent;
+    border: none;
+    cursor: grab;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    -webkit-tap-highlight-color: transparent; /* Remove tap highlight on mobile */
+    touch-action: none; /* Prevent scrolling while dragging */
+    position: relative;
+}
+
+.draggable-button-container.dragging {
+    transition: none;
+}
+
+
+.draggable-button-ring {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 3px solid rgba(255, 255, 255, 0.7);
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.3), 0 2px 5px rgba(0,0,0,0.3);
+    transition: transform 0.2s ease-out, box-shadow 0.2s ease-out, border-color 0.2s ease-out;
+}
+
+.theme-light .draggable-button-ring {
+    border-color: rgba(0, 0, 0, 0.6);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1), 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.draggable-button:hover .draggable-button-ring {
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 20px rgba(var(--rgb-accent-primary), 0.5), 0 4px 8px rgba(0,0,0,0.3);
+}
+
+.draggable-button:active,
+.draggable-button-container.dragging .draggable-button {
+    cursor: grabbing;
+}
+
+.draggable-button:active .draggable-button-ring,
+.draggable-button-container.dragging .draggable-button-ring {
+    transform: scale(1.1);
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 25px rgba(var(--rgb-accent-primary), 0.7), 0 4px 8px rgba(0,0,0,0.3);
+}
+
+/* AI Action Menu (Desktop) */
+.ai-action-menu {
+    position: absolute;
+    background: rgba(var(--rgb-bg-secondary), 0.9);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid var(--border-primary);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    padding: var(--space-2);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    min-width: 320px;
+    animation: menu-fade-in 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    max-height: 80vh;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--bg-interactive) transparent;
+}
+.ai-action-menu::-webkit-scrollbar {
+    width: 6px;
+}
+.ai-action-menu::-webkit-scrollbar-track {
+    background: transparent;
+}
+.ai-action-menu::-webkit-scrollbar-thumb {
+    background-color: var(--bg-interactive);
+    border-radius: var(--radius-sm);
+}
+
+.ai-menu-actions-section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+}
+
+.ai-menu-separator {
+    height: 1px;
+    background-color: var(--border-primary);
+    margin: var(--space-2) 0;
+}
+
+@keyframes menu-fade-in {
+    from {
+        opacity: 0;
+        transform: scale(0.95) translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+/* Menu Positioning (Desktop) */
+.ai-action-menu.bottom-right {
+    top: 0;
+    left: 100%;
+    transform-origin: top left;
+    margin-left: 12px;
+}
+.ai-action-menu.bottom-left {
+    top: 0;
+    right: 100%;
+    transform-origin: top right;
+    margin-right: 12px;
+}
+.ai-action-menu.top-right {
+    bottom: 0;
+    left: 100%;
+    transform-origin: bottom left;
+    margin-left: 12px;
+}
+.ai-action-menu.top-left {
+    bottom: 0;
+    right: 100%;
+    transform-origin: bottom right;
+    margin-right: 12px;
+}
+
+.ai-action-menu-item {
+    background-color: transparent;
+    border: 1px solid var(--border-primary);
+    color: var(--text-secondary);
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius-md);
+    text-align: left;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+}
+
+.ai-action-menu-item:hover:not(:disabled) {
+    background-color: var(--bg-interactive-hover);
+    color: var(--text-primary);
+    border-color: var(--accent-secondary);
+}
+
+.ai-action-menu-item:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.ai-action-icon {
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.ai-action-icon svg {
+    width: 100%;
+    height: 100%;
+}
+
+.ai-action-label {
+    flex-grow: 1;
+}
+
+.ai-menu-close-button {
+    position: absolute;
+    top: var(--space-2);
+    right: var(--space-2);
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 1.5rem;
+    line-height: 1;
+    cursor: pointer;
+    z-index: 10;
+    padding: var(--space-1);
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.ai-menu-close-button:hover {
+    background-color: var(--bg-interactive);
+    color: var(--text-primary);
+}
+
+
+/* NEW: Mobile Bottom Sheet Menu */
+.ai-menu-overlay-mobile {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(var(--rgb-bg-primary), 0.5);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 10003;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end; /* Align sheet to bottom */
+    animation: menu-fullscreen-fade-in 0.3s ease-out;
+}
+
+@keyframes menu-fullscreen-fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.ai-menu-sheet-mobile {
+    background: rgba(var(--rgb-bg-secondary), 0.9);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    width: 100%;
+    max-width: 600px;
+    border-top-left-radius: var(--radius-xl);
+    border-top-right-radius: var(--radius-xl);
+    padding: var(--space-3) var(--space-4);
+    padding-bottom: calc(var(--space-4) + env(safe-area-inset-bottom));
+    box-shadow: var(--shadow-lg);
+    animation: sheet-slide-up 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+    max-height: 80dvh;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    border-top: 1px solid var(--border-primary);
+}
+
+@keyframes sheet-slide-up {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+}
+
+.ai-menu-grab-handle {
+    width: 48px;
+    height: 6px;
+    background-color: var(--border-primary);
+    border-radius: 3px;
+    margin: 0 auto var(--space-2);
+    flex-shrink: 0;
+    cursor: pointer;
+}
+
+/* Hide the floating button when the mobile menu is open */
+.draggable-button-container.ai-menu-mobile-open {
+    display: none;
+}

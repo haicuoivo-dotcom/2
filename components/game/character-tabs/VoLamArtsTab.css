@@ -1,0 +1,36 @@
+/**
+ * @license
+ * SPDX-License-Identifier: Apache-2.0
+*/
+
+/* Shared styles for sub-tabs within a modal tab, originally for Vo Lam Arts */
+.vo-lam-sub-tabs {
+    display: flex;
+    border-bottom: 1px solid var(--border-primary);
+    margin-bottom: 1rem;
+    flex-shrink: 0;
+}
+
+.vo-lam-sub-tab-button {
+    background: none;
+    border: none;
+    padding: 0.75rem 1.25rem;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    transition: color 0.2s, border-color 0.2s;
+}
+
+.vo-lam-sub-tab-button.active {
+    color: var(--accent-primary);
+    border-bottom-color: var(--accent-primary);
+}
+
+.vo-lam-sub-tab-content {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding-top: 0.5rem;
+}

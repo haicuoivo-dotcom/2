@@ -1,0 +1,328 @@
+/**
+ * @license
+ * SPDX-License-Identifier: Apache-2.0
+*/
+
+.harem-modal .modal-body {
+    padding: 1.5rem;
+}
+
+.harem-modal-body {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    position: relative;
+    height: 100%;
+}
+
+.harem-mechanics-info-content {
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: var(--text-secondary);
+}
+
+.harem-mechanics-info-content p, .harem-mechanics-info-content ul {
+    margin: 0.5rem 0 0;
+}
+
+.harem-mechanics-info-content ul {
+    padding-left: 1.5rem;
+    list-style: '✓  ';
+}
+
+.harem-mechanics-info-content li {
+    padding-left: 0.5rem;
+    margin-bottom: 0.25rem;
+}
+
+.harem-mechanics-info-content strong {
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+.harem-columns {
+    display: grid;
+    /* NEW: Use auto-fit for a responsive column layout without media queries */
+    grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+    gap: 1.5rem;
+    flex-grow: 1;
+    min-height: 0;
+}
+
+.harem-section {
+    background-color: rgba(var(--rgb-bg-tertiary), 0.3);
+    padding: 1.25rem;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-primary);
+    display: flex;
+    flex-direction: column;
+    min-height: 0; /* Quan trọng cho việc cuộn của flexbox */
+}
+
+.harem-available-header {
+    flex-shrink: 0;
+}
+
+.harem-section h4 {
+    margin: 0 0 1rem;
+    color: var(--text-secondary);
+    border-bottom: 1px solid var(--border-primary);
+    padding-bottom: 0.75rem;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+}
+
+.harem-available-header h4 {
+    border-bottom: none;
+    padding-bottom: 0;
+    margin-bottom: 0.75rem;
+}
+
+.harem-controls {
+    display: flex;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+}
+
+.harem-search-input,
+.harem-sort-select {
+    padding: 8px 12px;
+    font-size: 0.9rem;
+    background-color: var(--bg-tertiary);
+    border: 1px solid var(--border-primary);
+    border-radius: var(--radius-md);
+    color: var(--text-primary);
+    font-family: inherit;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.harem-search-input:focus,
+.harem-sort-select:focus {
+    outline: none;
+    border-color: var(--accent-secondary);
+    box-shadow: 0 0 0 3px rgba(var(--rgb-accent-secondary), 0.3);
+}
+
+.harem-search-input {
+    flex-grow: 1;
+    min-width: 150px;
+}
+
+.harem-sort-select {
+    flex-shrink: 0;
+}
+
+.harem-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    /* NEW: Reduced min-width to make cards smaller, thus making avatars smaller */
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    align-content: start;
+    gap: 1rem;
+    flex-grow: 1;
+    padding: 0.5rem;
+    margin: -0.5rem;
+}
+
+.harem-npc-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    background-color: var(--bg-interactive);
+    padding: 0.75rem;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-primary);
+    transition: background-color 0.2s, box-shadow 0.2s, transform 0.2s;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    cursor: pointer;
+}
+
+.harem-npc-card:hover {
+    background-color: var(--bg-interactive-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(var(--rgb-bg-primary), 0.2);
+}
+
+.harem-npc-avatar-wrapper {
+    width: 100%;
+    aspect-ratio: 9 / 16;
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    flex-shrink: 0;
+    border: 2px solid var(--border-primary);
+    position: relative;
+}
+
+.harem-npc-avatar {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.harem-npc-avatar-placeholder {
+    width: 100%;
+    height: 100%;
+    background-color: var(--bg-tertiary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    color: var(--text-secondary);
+    font-size: 3rem;
+}
+
+.harem-npc-details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    min-width: 0;
+}
+
+.harem-npc-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.5rem;
+}
+
+.harem-npc-name {
+    font-weight: 600;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.harem-npc-info-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+    margin-top: 0;
+}
+
+.harem-npc-stat {
+    display: grid;
+    grid-template-columns: 24px 1fr;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.harem-npc-stat-icon {
+    font-size: 1.1rem;
+    line-height: 1;
+    text-align: center;
+    filter: drop-shadow(0 1px 1px rgba(0,0,0,0.5));
+}
+
+.harem-npc-stat-value {
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.harem-npc-hp-bar-container {
+    width: 100%;
+    height: 16px;
+    background-color: var(--bg-tertiary);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    position: relative;
+    border: 1px solid var(--border-primary);
+}
+
+.harem-npc-hp-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #1e8449, #27ae60, #2ecc71);
+    transition: width 0.3s ease-in-out;
+}
+
+.harem-npc-hp-text {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: white;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+}
+
+.harem-npc-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+    margin-top: 0.25rem;
+}
+
+.harem-action-button {
+    padding: 6px 12px;
+    border-radius: var(--radius-sm);
+    border: 1px solid transparent;
+    font-weight: 600;
+    cursor: pointer;
+    transition: filter 0.2s, transform 0.2s;
+    font-size: 0.85rem;
+}
+
+.harem-action-button:hover:not(:disabled) {
+    filter: brightness(1.1);
+    transform: scale(1.05);
+}
+.harem-action-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background-color: var(--bg-tertiary);
+    color: var(--text-muted);
+    border-color: var(--border-primary);
+    transform: none;
+}
+
+.harem-action-button.add {
+    background-color: var(--accent-success);
+    color: var(--text-on-accent);
+}
+
+.harem-action-button.remove {
+    background-color: var(--accent-danger);
+    color: white;
+}
+
+.harem-affinity-bar-container {
+    width: 100%;
+    height: 16px;
+    background-color: var(--bg-tertiary);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    position: relative;
+    border: 1px solid var(--border-primary);
+}
+
+.harem-affinity-bar {
+    height: 100%;
+    border-radius: var(--radius-sm);
+    transition: width 0.3s ease-in-out;
+}
+
+.harem-affinity-text {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: white;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+}
+
+body[data-mobile-mode="on"] .harem-modal-body {
+    overflow-y: auto;
+}
+
+body[data-mobile-mode="on"] .harem-columns {
+    grid-template-columns: 1fr;
+}

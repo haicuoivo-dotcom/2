@@ -1,0 +1,45 @@
+/**
+ * @license
+ * SPDX-License-Identifier: Apache-2.0
+*/
+
+@keyframes float-up-fade-out {
+    0% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-50px) scale(0.8);
+    }
+}
+
+.status-effect-indicator {
+    position: absolute;
+    padding: 0.5rem 1rem;
+    border-radius: 1rem;
+    font-size: 1rem;
+    font-weight: bold;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+    white-space: nowrap;
+    animation: float-up-fade-out 1.5s ease-out forwards;
+    pointer-events: none;
+}
+
+.status-effect-indicator.buff {
+    background-color: rgba(var(--rgb-accent-success), 0.8);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.8);
+}
+
+.status-effect-indicator.debuff {
+    background-color: rgba(var(--rgb-accent-danger), 0.8);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.8);
+}
+
+.status-effect-indicator.neutral {
+    background-color: rgba(var(--rgb-bg-interactive), 0.8);
+    color: var(--text-primary);
+    border: 1px solid var(--border-primary);
+}

@@ -1,0 +1,69 @@
+/**
+ * @license
+ * SPDX-License-Identifier: Apache-2.0
+*/
+.auction-npc-panel {
+    background-color: rgba(var(--rgb-bg-tertiary), 0.5);
+    border: 2px solid var(--border-primary);
+    border-radius: var(--radius-md);
+    padding: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease-in-out;
+}
+
+.npc-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: var(--bg-interactive);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    flex-shrink: 0;
+    overflow: hidden;
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.npc-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.npc-icon svg {
+    width: 20px;
+    height: 20px;
+}
+
+.npc-name {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: center;
+    width: 100%;
+}
+
+.auction-npc-panel.highest-bidder {
+    border-color: var(--accent-npc);
+    background-color: rgba(var(--rgb-accent-npc), 0.1);
+    transform: scale(1.05);
+    box-shadow: 0 0 10px rgba(var(--rgb-accent-npc), 0.4);
+}
+
+.auction-npc-panel.highest-bidder .npc-icon {
+    background-color: var(--accent-npc);
+    color: white;
+}
+
+.auction-npc-panel.highest-bidder .npc-name {
+    color: var(--accent-npc);
+    font-weight: 600;
+}

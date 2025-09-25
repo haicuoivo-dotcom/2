@@ -1,0 +1,106 @@
+/* --- Animations --- */
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes modal-fade-in {
+  from { opacity: 0; transform: translateY(-20px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateX(100%); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes status-pop-in {
+  from { transform: scale(0.5); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+@keyframes slide-up-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes bubble-pop-in {
+    from { transform: scale(0.9); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+@keyframes aurora-glow {
+  0% {
+    background-position: 0% 0%;
+  }
+  100% {
+    background-position: 100% 100%;
+  }
+}
+
+@keyframes aurora-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes avatar-glow {
+    0% {
+        box-shadow: 0 0 8px 2px rgba(var(--rgb-accent-primary), 0.2);
+    }
+    50% {
+        box-shadow: 0 0 16px 5px rgba(var(--rgb-accent-primary), 0.4);
+    }
+    100% {
+        box-shadow: 0 0 8px 2px rgba(var(--rgb-accent-primary), 0.2);
+    }
+}
+
+@keyframes title-shine {
+  to {
+    background-position: 200% center;
+  }
+}
+
+@keyframes background-fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes ai-glow {
+  0%, 100% {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2), inset 0 1px 1px rgba(255,255,255,0.1), 0 0 5px rgba(var(--rgb-menu-btn-ai), 0.5), 0 0 10px rgba(var(--rgb-menu-btn-ai), 0.3);
+    border-color: rgba(var(--rgb-menu-btn-ai), 0.7);
+  }
+  50% {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2), inset 0 1px 1px rgba(255,255,255,0.1), 0 0 15px rgba(var(--rgb-menu-btn-ai), 0.8), 0 0 25px rgba(var(--rgb-menu-btn-ai), 0.5);
+    border-color: var(--menu-btn-ai);
+  }
+}
+
+@keyframes tier-s-glow {
+  0%, 100% { box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.2), 0 0 10px var(--tier-s-glow), 0 0 4px var(--tier-s-glow) inset; }
+  50% { box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.2), 0 0 20px var(--tier-s-glow), 0 0 8px var(--tier-s-glow) inset; }
+}
+@keyframes tier-a-glow {
+  0%, 100% { box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.2), 0 0 5px var(--tier-a-glow); }
+  50% { box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.2), 0 0 10px var(--tier-a-glow); }
+}
+@keyframes tier-ss-glow {
+  0%, 100% { box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.2), 0 0 15px var(--tier-ss-glow), 0 0 6px var(--tier-ss-glow) inset; }
+  50% { box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.2), 0 0 25px var(--tier-ss-glow), 0 0 10px var(--tier-ss-glow) inset; }
+}
+@keyframes tier-sss-glow {
+  0%, 100% { box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.3), 0 0 20px var(--tier-sss-glow), 0 0 8px var(--tier-sss-glow) inset; }
+  50% { box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.3), 0 0 35px var(--tier-sss-glow), 0 0 14px var(--tier-sss-glow) inset; }
+}
+@keyframes rarity-godly-move { 
+    0%{background-position:0% 50%}
+    50%{background-position:100% 50%}
+    100%{background-position:0% 50%}
+}

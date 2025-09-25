@@ -1,0 +1,412 @@
+/**
+ * @license
+ * SPDX-License-Identifier: Apache-2.0
+*/
+
+.map-overlay {
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
+.map-modal-content {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+}
+
+.map-modal-content .modal-header {
+    flex-shrink: 0;
+    z-index: 10;
+    position: relative;
+    background: rgba(var(--rgb-bg-secondary), 0.7);
+}
+
+.map-modal-content .modal-header h3 {
+    flex-grow: 0; /* Let the content wrapper handle growth */
+    flex-shrink: 0;
+}
+
+.map-modal-content .modal-header .map-search-container {
+    flex-grow: 1;
+    max-width: 450px;
+}
+
+/* --- NEW Toolbar --- */
+.map-toolbar {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 0.5rem 1.5rem;
+    border-bottom: 1px solid var(--border-primary);
+    background-color: rgba(var(--rgb-bg-tertiary), 0.8);
+    flex-shrink: 0;
+    z-index: 5;
+}
+
+.map-toolbar-group {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.toolbar-separator {
+    width: 1px;
+    height: 24px;
+    background-color: var(--border-primary);
+    margin: 0 0.5rem;
+}
+
+/* --- Dropdown for Nearby NPCs --- */
+.dropdown-container {
+    position: relative;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-primary);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-md);
+    list-style: none;
+    padding: 0.5rem 0;
+    margin: 0;
+    min-width: 200px;
+    z-index: 10;
+    animation: menu-fade-in 0.2s ease-out;
+}
+
+.dropdown-header {
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--border-primary);
+    margin-bottom: 0.5rem;
+}
+
+.dropdown-item {
+    padding: 0.6rem 1rem;
+    cursor: pointer;
+    color: var(--text-primary);
+    transition: background-color 0.2s;
+    font-size: 0.9rem;
+}
+
+.dropdown-item:hover {
+    background-color: var(--bg-interactive-hover);
+}
+
+.dropdown-empty {
+    padding: 0.6rem 1rem;
+    color: var(--text-muted);
+    font-style: italic;
+    font-size: 0.9rem;
+}
+
+.npc-count-badge {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    background-color: var(--accent-danger);
+    color: white;
+    font-size: 10px;
+    font-weight: bold;
+    border-radius: 50%;
+    width: 16px;
+    height: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--bg-tertiary);
+}
+
+/* --- Map Viewport --- */
+.map-view-2d {
+    flex-grow: 1;
+    position: relative;
+    cursor: grab;
+    overflow: hidden;
+    background-color: #2c3e50;
+    background-image:
+        linear-gradient(rgba(255,255,255,0.07) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.07) 1px, transparent 1px);
+    background-size: 20px 20px;
+    z-index: 1;
+}
+.map-view-2d.panning {
+    cursor: grabbing;
+}
+.map-view-2d.is-adding-marker {
+    cursor: crosshair;
+}
+
+.map-plane-2d {
+    width: 100%;
+    height: 100%;
+    transform-origin: 0 0;
+    position: relative;
+}
+
+.map-item {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+    transition: transform 0.2s ease-out;
+}
+
+.map-item:hover {
+    transform: translate(-50%, -50%) scale(1.1);
+    z-index: 2;
+}
+
+.map-item-icon {
+    width: 40px;
+    height: 40px;
+    background-color: var(--bg-secondary);
+    border: 2px solid var(--border-primary);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    filter: drop-shadow(0 2px 3px rgba(0,0,0,0.4));
+    transform: scale(var(--icon-scale, 1));
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+.map-item:hover .map-item-icon {
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+.map-item-label {
+    background-color: rgba(var(--rgb-bg-primary), 0.8);
+    color: var(--text-secondary);
+    padding: 4px 8px;
+    border-radius: var(--radius-sm);
+    font-size: 12px;
+    margin-bottom: 8px;
+    white-space: nowrap;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+    text-align: center;
+}
+.map-item-label .location-name {
+    font-weight: 600;
+    color: var(--text-primary);
+    display: block;
+}
+.map-item-label .location-owner {
+    font-size: 10px;
+    color: var(--text-muted);
+    font-style: italic;
+}
+
+.map-item.marker .map-item-label {
+    color: var(--accent-warning);
+}
+.map-item.player .map-item-label {
+    color: var(--accent-pc);
+}
+
+.player-icon {
+    width: 24px;
+    height: 24px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.player-icon-dot {
+    width: 12px;
+    height: 12px;
+    background-color: var(--accent-pc);
+    border-radius: 50%;
+    border: 2px solid white;
+    z-index: 1;
+    box-shadow: 0 0 8px var(--accent-pc);
+}
+.player-icon-pulse {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background-color: var(--accent-pc);
+    animation: pulse-animation 2s infinite cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 0;
+}
+
+@keyframes pulse-animation {
+  0% {
+    transform: scale(0.8);
+    opacity: 0.8;
+  }
+  70% {
+    transform: scale(2.5);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+}
+
+/* --- Character Pins --- */
+.character-pin {
+    transform: translate(-50%, -100%); /* Position above the coordinate point */
+}
+.character-pin:hover {
+    transform: translate(-50%, -100%) scale(1.1);
+    z-index: 3;
+}
+.character-label {
+    font-weight: 600;
+}
+.character-pin.player .character-label {
+    color: var(--accent-pc);
+    font-size: 14px;
+}
+.character-pin.npc .character-label {
+    color: var(--accent-npc);
+}
+.character-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background-color: var(--bg-secondary);
+    border: 2px solid var(--border-primary);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    overflow: hidden;
+}
+.character-pin.player {
+    z-index: 2; /* Ensure player is above NPCs if overlapped */
+}
+.character-pin.npc .character-avatar {
+    border-color: var(--accent-npc);
+}
+.character-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.character-avatar span {
+    font-size: 16px;
+}
+
+
+/* --- Remove old toolbar --- */
+.map-controls-toolbar {
+    display: none;
+}
+.map-control-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-primary);
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
+    font-size: 1.2rem;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: var(--shadow-sm);
+    transition: background-color 0.2s, transform 0.1s, border-color 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative; /* for badge */
+}
+.map-control-btn:hover { background-color: var(--bg-interactive); }
+.map-control-btn:active { transform: scale(0.95); }
+.map-control-btn.active { background-color: var(--accent-primary); color: var(--text-on-accent); border-color: var(--accent-primary); }
+.map-control-btn svg { width: 24px; height: 24px; }
+
+
+/* --- Search --- */
+.map-search-container {
+    justify-self: center;
+    position: relative;
+    width: 100%;
+    max-width: 400px;
+}
+.map-search-input {
+    width: 100%;
+}
+.map-search-results {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: var(--bg-tertiary);
+    border: 1px solid var(--border-primary);
+    border-top: none;
+    border-radius: 0 0 var(--radius-md) var(--radius-md);
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 10;
+}
+.map-search-result-item {
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+}
+.map-search-result-item:hover {
+    background-color: var(--bg-interactive-hover);
+}
+
+/* --- Info Panel --- */
+.map-info-panel-2d {
+    position: absolute;
+    top: calc(1.5rem + 54px + 53px); /* Header height + toolbar height + margin */
+    right: 1.5rem;
+    width: 320px;
+    max-height: calc(100% - 3rem - 54px - 53px);
+    background-color: rgba(var(--rgb-bg-tertiary), 0.95);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid var(--border-primary);
+    border-radius: var(--radius-lg);
+    z-index: 5;
+    display: flex;
+    flex-direction: column;
+    animation: info-panel-slide-in 0.3s ease-out;
+}
+
+@keyframes info-panel-slide-in {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+.map-info-panel-2d h4 {
+    margin: 0;
+    padding: 1rem;
+    border-bottom: 1px solid var(--border-primary);
+    font-size: 1.1rem;
+    color: var(--accent-primary);
+}
+.map-info-panel-2d .panel-body { padding: 1rem; overflow-y: auto; display: flex; flex-direction: column; gap: 1rem; }
+.map-info-panel-2d .panel-description { margin: 0; font-size: 0.9rem; color: var(--text-secondary); line-height: 1.6; }
+.map-info-panel-2d .panel-coords {
+    font-size: 0.8rem;
+    font-family: monospace;
+    color: var(--text-muted);
+    background: var(--bg-interactive);
+    padding: 4px 8px;
+    border-radius: 4px;
+    align-self: flex-start;
+}
+.map-info-panel-2d .panel-footer { padding: 1rem; border-top: 1px solid var(--border-primary); display: flex; gap: 0.75rem; }
+.map-info-panel-2d .panel-footer .lore-button { flex-grow: 1; }
+.icon-picker { display: grid; grid-template-columns: repeat(auto-fill, minmax(40px, 1fr)); gap: 0.5rem; }
+.icon-option { width: 40px; height: 40px; border-radius: var(--radius-sm); border: 2px solid var(--border-primary); background-color: var(--bg-interactive); cursor: pointer; font-size: 1.5rem; display: flex; align-items: center; justify-content: center; transition: border-color 0.2s, background-color 0.2s; }
+.icon-option.selected { border-color: var(--accent-primary); background-color: var(--bg-interactive-hover); }

@@ -1,0 +1,35 @@
+/**
+ * @license
+ * SPDX-License-Identifier: Apache-2.0
+*/
+
+.customize-ui-modal {
+    max-width: var(--modal-width-lg);
+}
+
+.customize-ui-modal-body {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.customize-ui-section {
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border-primary);
+}
+.customize-ui-section:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.customize-ui-section h4 {
+    margin: 0 0 1rem;
+    font-size: 1rem;
+    color: var(--text-secondary);
+}
+
+.customize-ui-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1rem;
+}

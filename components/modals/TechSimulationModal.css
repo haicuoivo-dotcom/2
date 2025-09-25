@@ -1,0 +1,160 @@
+/**
+ * @license
+ * SPDX-License-Identifier: Apache-2.0
+*/
+
+.tech-sim-modal {
+    max-width: var(--modal-width-xl);
+}
+.tech-sim-modal .modal-body {
+    padding: 0;
+}
+.tech-sim-modal .api-key-tab-content {
+    padding: 1.5rem;
+    min-height: 400px;
+}
+
+.tech-sim-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.tech-sim-actions {
+    text-align: center;
+}
+
+.tech-sim-actions .lore-button {
+    margin: 0 auto;
+}
+
+.tech-sim-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    padding: 2rem;
+    color: var(--text-muted);
+    border: 1px dashed var(--border-primary);
+    border-radius: var(--radius-md);
+    position: relative;
+    overflow: hidden;
+}
+
+.scanner-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background-color: var(--accent-primary);
+    box-shadow: 0 0 10px var(--accent-primary), 0 0 20px var(--accent-primary);
+    animation: scan-animation 3s infinite ease-in-out;
+}
+
+@keyframes scan-animation {
+    0% { top: 0; }
+    50% { top: 100%; }
+    100% { top: 0; }
+}
+
+.analysis-results {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    animation: slide-up-fade-in 0.5s ease-out;
+}
+
+.analysis-section {
+    background-color: rgba(var(--rgb-bg-tertiary), 0.3);
+    padding: 1rem;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-primary);
+}
+
+.analysis-section h4 {
+    margin: 0 0 1rem;
+    color: var(--accent-secondary);
+    border-bottom: 1px solid var(--border-primary);
+    padding-bottom: 0.75rem;
+}
+
+.analysis-section ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.analysis-section li {
+    font-size: 0.9rem;
+}
+.analysis-section li strong {
+    color: var(--text-primary);
+    display: block;
+}
+.analysis-section li p {
+    margin: 0.25rem 0 0;
+    color: var(--text-muted);
+    line-height: 1.5;
+}
+
+/* Blockchain Timeline Styles */
+.blockchain-timeline {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    padding: 1rem 0;
+}
+
+.timeline-block {
+    width: 90%;
+    background-color: var(--bg-tertiary);
+    border: 1px solid var(--border-primary);
+    border-radius: var(--radius-lg);
+    padding: 1rem;
+    box-shadow: var(--shadow-sm);
+    position: relative;
+    z-index: 2;
+}
+
+.timeline-block-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px dashed var(--border-primary);
+}
+
+.block-timestamp {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+.block-hash {
+    font-family: monospace;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    cursor: help;
+}
+
+.timeline-block-content p {
+    margin: 0;
+    font-style: italic;
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+.timeline-connector {
+    width: 4px;
+    height: 32px;
+    background-color: var(--border-primary);
+    position: relative;
+    z-index: 1;
+}

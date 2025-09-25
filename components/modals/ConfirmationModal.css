@@ -1,0 +1,55 @@
+/* --- Confirmation Modal --- */
+.confirmation-overlay {
+    z-index: 10005; /* Ensure it's on top of other modals like item details or avatar editor */
+}
+
+.confirmation-message {
+    font-size: var(--font-size-base);
+    line-height: 1.6;
+    color: var(--text-secondary);
+    margin: 0;
+    text-align: center;
+}
+
+.confirmation-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border-primary);
+}
+
+.confirmation-button {
+    padding: 0.6rem 1.2rem;
+    border-radius: var(--radius-md);
+    border: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+    border: 1px solid transparent;
+}
+
+.confirmation-button:hover:not(:disabled) {
+    filter: brightness(1.1);
+}
+.confirmation-button.cancel {
+    background: linear-gradient(145deg, var(--bg-interactive-hover), var(--bg-interactive));
+    color: var(--text-primary);
+    border-color: var(--border-primary);
+}
+
+.confirmation-button.confirm-danger {
+    background: linear-gradient(145deg, #F05A5A, var(--accent-danger));
+    color: white;
+    text-shadow: 0 1px 1px rgba(0,0,0,0.2);
+}
+
+/* --- Mobile Override --- */
+/* Keep confirmation modals small and centered on mobile, overriding the global fullscreen style */
+body[data-mobile-mode="on"] .confirmation-modal-content {
+    width: 90%;
+    max-width: var(--modal-width-sm);
+    height: auto;
+    max-height: 90dvh;
+}

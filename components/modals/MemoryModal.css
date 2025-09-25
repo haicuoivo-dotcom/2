@@ -1,0 +1,204 @@
+/* Memory Modal */
+
+.memory-modal-content .modal-header {
+    margin: 0;
+}
+
+.memory-header .modal-header-content {
+    display: flex;
+    flex-grow: 1;
+    align-items: center;
+    gap: 1rem;
+    min-width: 0; /* Important for flex children */
+}
+
+.memory-header h3 {
+    flex-shrink: 0; /* Don't let title shrink */
+    white-space: nowrap;
+}
+
+.memory-modal-content .memory-list {
+    padding-right: 0.5rem;
+    margin-right: -0.5rem;
+}
+
+
+/* --- Original styles adjusted for fullscreen layout --- */
+.memory-header {
+    /* Layout properties are now handled by the generic .modal-header and .modal-header-content */
+}
+
+.memory-header-controls {
+    display: none; /* Replaced by new flat structure */
+}
+
+.memory-search-input {
+    flex-grow: 1; /* This will make it expand */
+    min-width: 150px; /* Give it a minimum width */
+    max-width: none; /* Allow it to grow indefinitely */
+}
+
+.memory-search-input, .memory-sort-select {
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-primary);
+    border-radius: var(--radius-md);
+    color: var(--text-primary);
+    padding: var(--space-2) var(--space-3);
+    font-size: var(--font-size-base);
+    font-family: inherit;
+}
+
+.memory-search-input:focus, .memory-sort-select:focus {
+    outline: none;
+    border-color: var(--accent-secondary);
+    box-shadow: 0 0 0 3px rgba(var(--rgb-accent-secondary), 0.3);
+}
+
+.memory-filter-pinned {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    user-select: none;
+    flex-shrink: 0; /* Don't shrink the checkbox label */
+}
+.memory-filter-pinned input {
+    width: 1rem;
+    height: 1rem;
+}
+.memory-filter-pinned span {
+    white-space: nowrap; /* Prevent "Ghim" from wrapping */
+}
+
+
+.memory-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--border-primary);
+}
+.memory-details {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-grow: 1;
+    margin-right: 1rem;
+    min-width: 0; /* Fix for flexbox overflow */
+}
+.memory-text {
+    flex-grow: 1;
+    font-style: italic;
+    min-width: 0;
+}
+.memory-item-actions {
+    display: flex;
+    gap: 0.75rem;
+    flex-shrink: 0;
+}
+.memory-pin-button {
+    background-color: var(--bg-interactive);
+    border: 1px solid var(--border-primary);
+    color: var(--text-primary);
+    padding: 6px var(--space-3);
+    border-radius: var(--radius-sm);
+    font-weight: 500;
+    white-space: nowrap;
+}
+.memory-pin-button.pinned {
+    background-color: var(--accent-secondary);
+    color: white;
+    border-color: transparent;
+}
+.memory-delete-button {
+    background-color: var(--accent-danger);
+    border: 1px solid transparent;
+    color: white;
+    padding: 6px var(--space-3);
+    border-radius: var(--radius-sm);
+    font-weight: 500;
+    white-space: nowrap;
+}
+.memory-delete-button:hover:not(:disabled) {
+    background-color: #c23333;
+}
+.no-memories-message {
+    text-align: center;
+    padding: 2rem;
+    color: var(--text-muted);
+}
+
+.memory-score-badge {
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-full);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1rem;
+    color: white;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+    cursor: help;
+    border: 2px solid rgba(255, 255, 255, 0.7);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.score-high {
+    background: linear-gradient(145deg, #FFD700, #FFA500); /* Gold */
+}
+.score-medium {
+    background: linear-gradient(145deg, #8A82FF, var(--accent-secondary)); /* Purple */
+}
+.score-low {
+    background: linear-gradient(145deg, #848d9c, #6C757D); /* Gray */
+}
+
+/* NEW: Sort Button & Dropdown Styles */
+.sort-button-wrapper {
+    position: relative;
+    flex-shrink: 0;
+}
+
+.sort-button {
+    width: auto; /* Let it size to content */
+    white-space: nowrap;
+}
+
+.sort-dropdown-menu {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-primary);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-lg);
+    z-index: 10;
+    width: 220px;
+    padding: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    animation: modal-fade-in 0.2s ease-out;
+}
+
+.sort-dropdown-option {
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    text-align: left;
+    border-radius: var(--radius-sm);
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.sort-dropdown-option:hover, .sort-dropdown-option.active {
+    background-color: var(--bg-interactive-hover);
+    color: var(--text-primary);
+}

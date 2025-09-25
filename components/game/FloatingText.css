@@ -1,0 +1,56 @@
+/**
+ * @license
+ * SPDX-License-Identifier: Apache-2.0
+*/
+
+@keyframes float-up-and-fade {
+    0% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-80px) scale(0.8);
+    }
+}
+
+@keyframes crit-shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-3px); }
+    20%, 40%, 60%, 80% { transform: translateX(3px); }
+}
+
+.floating-text {
+    position: absolute;
+    font-size: 28px;
+    font-weight: bold;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.7);
+    white-space: nowrap;
+    animation: float-up-and-fade 1.8s ease-out forwards;
+    pointer-events: none;
+    z-index: 11; /* Above status indicators */
+}
+
+.floating-text.damage {
+    color: var(--accent-danger);
+}
+
+.floating-text.heal {
+    color: var(--accent-success);
+}
+
+.floating-text.crit {
+    color: var(--accent-warning);
+    font-size: 40px;
+    animation-name: float-up-and-fade, crit-shake;
+    animation-duration: 1.8s, 0.5s;
+    animation-timing-function: ease-out, ease-in-out;
+    animation-iteration-count: 1, 1;
+    animation-fill-mode: forwards, forwards;
+}
+
+.floating-text.miss {
+    color: var(--text-muted);
+    font-size: 24px;
+    font-style: italic;
+}

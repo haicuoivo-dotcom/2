@@ -1,0 +1,19 @@
+/**
+ * @license
+ * SPDX-License-Identifier: Apache-2.0
+*/
+
+.auto-combat-button {
+    width: 100%;
+    font-size: 1.1rem !important;
+    height: 50px !important;
+    justify-content: center;
+}
+.auto-combat-button.stop {
+    background: linear-gradient(145deg, #F05A5A, var(--accent-danger));
+    color: white;
+}
+.auto-combat-button.start {
+    background: linear-gradient(145deg, var(--accent-success), var(--menu-btn-ai));
+    color: white;
+}

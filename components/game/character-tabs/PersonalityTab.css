@@ -1,0 +1,108 @@
+/**
+ * @license
+ * SPDX-License-Identifier: Apache-2.0
+*/
+.personality-tab-container {
+    padding: 1.5rem;
+}
+
+.personality-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+.personality-header h4 {
+    margin: 0;
+    font-size: 1.2rem;
+    color: var(--text-primary);
+}
+.personality-header .harem-action-button {
+    display: inline-flex;
+    gap: 0.5rem;
+    align-items: center;
+    padding: 8px 16px;
+    font-size: 0.9rem;
+    background-color: var(--bg-interactive);
+}
+.personality-header .harem-action-button svg {
+    width: 16px;
+    height: 16px;
+}
+
+.trait-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1rem;
+}
+
+.trait-card {
+    background-color: var(--bg-tertiary);
+    border: 1px solid var(--border-primary);
+    border-radius: var(--radius-lg);
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    animation: slide-up-fade-in 0.3s ease-out;
+}
+
+.trait-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.trait-name {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--accent-secondary);
+}
+
+.trait-remove-button {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-size: 1.5rem;
+    padding: 0.25rem;
+    line-height: 1;
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    flex-shrink: 0;
+    transition: opacity 0.2s, background-color 0.2s, color 0.2s;
+}
+.trait-remove-button:hover {
+    background-color: rgba(var(--rgb-accent-danger), 0.1);
+    color: var(--accent-danger);
+}
+
+.trait-description {
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    flex-grow: 1;
+}
+
+.trait-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    padding-top: 0.75rem;
+    border-top: 1px dashed var(--border-primary);
+}
+
+.trait-tag {
+    background-color: var(--bg-interactive);
+    color: var(--text-muted);
+    padding: 4px 8px;
+    border-radius: var(--radius-sm);
+    font-size: 0.75rem;
+    font-weight: 500;
+}

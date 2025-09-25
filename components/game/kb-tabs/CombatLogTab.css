@@ -1,0 +1,61 @@
+/**
+ * @license
+ * SPDX-License-Identifier: Apache-2.0
+*/
+
+.combat-log-container {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 1.5rem;
+    overflow-y: auto;
+}
+
+.combat-log-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.combat-log-item {
+    background-color: rgba(var(--rgb-bg-tertiary), 0.5);
+    padding: 1rem;
+    border-radius: var(--radius-md);
+    border-left: 4px solid var(--accent-danger);
+    animation: slide-up-fade-in 0.3s ease-out;
+}
+
+.combat-log-item-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.combat-log-turn-number {
+    font-weight: 700;
+    color: var(--text-secondary);
+    background-color: var(--bg-tertiary);
+    padding: 6px 10px;
+    border-radius: var(--radius-sm);
+    min-width: 70px;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.combat-log-action {
+    margin: 0;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.combat-log-summary {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    font-style: italic;
+    padding-left: calc(70px + 1rem); /* Align with action text */
+    line-height: 1.6;
+}

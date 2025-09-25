@@ -1,0 +1,36 @@
+/**
+ * @license
+ * SPDX-License-Identifier: Apache-2.0
+*/
+
+.readout-container {
+    background-color: var(--bg-readout);
+    border: 1px solid var(--border-readout);
+    border-left: 4px solid var(--accent-readout);
+    border-radius: var(--radius-md);
+    padding: 1rem 1.5rem;
+    margin: 1.5rem auto;
+    max-width: 85%;
+    box-shadow: var(--shadow-sm);
+    animation: bubble-pop-in 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.readout-header {
+    font-style: italic;
+    color: var(--text-muted);
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px dashed var(--border-readout);
+    font-size: 0.9em;
+}
+
+.readout-content {
+    font-family: 'Merriweather', serif;
+    font-size: 0.95em;
+    line-height: 1.7;
+    color: var(--text-primary);
+}
+
+.readout-content .entity {
+    font-family: inherit; /* Ensure entities inside use the same font */
+}

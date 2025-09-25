@@ -1,0 +1,577 @@
+/* --- Core Variables & Global Styles --- */
+:root {
+  --base-font-size: 17px;
+  --interactive-transition-duration: 0.15s;
+
+  /* NEW: Variable for interactive element hover effect */
+  --interactive-transform: translateY(-2px);
+
+  /* Spacing System (4px scale) */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-7: 28px;
+  --space-8: 32px;
+  --space-12: 48px;
+
+  /* Typography Scale */
+  --font-size-xs: 0.75rem;   /* 12px */
+  --font-size-sm: 0.875rem;  /* 14px */
+  --font-size-base: 1rem;     /* 16px */
+  --font-size-md: 1.125rem; /* 18px */
+  --font-size-lg: 1.25rem;  /* 20px */
+  --font-size-xl: 1.5rem;   /* 24px */
+  --font-size-2xl: 2.25rem; /* 36px */
+  --font-size-display: 2.75rem; /* 44px */
+
+  /* Border Radii */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-full: 50%;
+
+  /* Modal Sizes */
+  --modal-width-sm: 450px;
+  --modal-width-md: 550px;
+  --modal-width-lg: 700px;
+  --modal-width-xl: 800px;
+
+  /* NEW: Safe Area Insets for Mobile Landscape (Notches) */
+  --safe-area-inset-top: env(safe-area-inset-top, 0px);
+  --safe-area-inset-right: env(safe-area-inset-right, 0px);
+  --safe-area-inset-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-area-inset-left: env(safe-area-inset-left, 0px);
+}
+
+/* --- Themes --- */
+.theme-dark {
+  --bg-primary: #0D0C1D;
+  --bg-secondary: linear-gradient(170deg, #333948, #2E3440);
+  --bg-tertiary: linear-gradient(170deg, #2F3540, #2A303A);
+  --bg-interactive: #383E4A;
+  --bg-interactive-hover: #434C5E;
+  --border-primary: #434C5E;
+  --text-primary: #FFFFFF;
+  --text-secondary: #C7C7CC;
+  --text-muted: #AEAEB2;
+  --text-placeholder: #636366;
+  
+  /* REFACTORED: Define base colors */
+  --accent-primary-base: #29DDC5;
+  --accent-secondary-base: #6B61F5;
+  --rgb-accent-primary-base: 41, 221, 197;
+  --rgb-accent-secondary-base: 107, 97, 245;
+
+  /* REFACTORED: Use overrides */
+  --accent-primary: var(--user-accent-primary, var(--accent-primary-base));
+  --accent-secondary: var(--user-accent-secondary, var(--accent-secondary-base));
+  --rgb-accent-primary: var(--user-rgb-accent-primary, var(--rgb-accent-primary-base));
+  --rgb-accent-secondary: var(--user-rgb-accent-secondary, var(--rgb-accent-secondary-base));
+
+  --accent-success: #2CDA9D;
+  --accent-warning: #FFA000;
+  --accent-danger: #D83C3C;
+  --accent-pink: #f02c84;
+  --text-on-accent: #0D0C1D;
+  --accent-pc: #FFD700; /* Gold */
+  --accent-npc: #29DDC5; /* Cyan */
+  --accent-item: #D83C3C;
+  --accent-loc: #7EE787;
+  --accent-faction: #FF7B72;
+  --accent-monster: #9B59B6;
+  --menu-btn-ai: var(--accent-success);
+  --menu-btn-create: #27B8A5;
+  --menu-btn-about: #28B463;
+  --menu-btn-load: #6B61F5;
+  --menu-btn-api-keys: var(--accent-danger);
+  --menu-btn-settings: #48484A;
+  --text-on-accent-muted: #E5E5EA;
+
+  /* NEW: Status Colors */
+  --accent-violet: #ab47bc; /* Negative psychological status */
+  --accent-slate-blue: #78909c; /* Complex psychological status */
+  --accent-info-blue: #42a5f5; /* Positive psychological status */
+
+  /* Skill Tier Colors */
+  --tier-s-bg: linear-gradient(145deg, #ffab40, #ff8f00);
+  --tier-s-glow: #ffab40;
+  --tier-a-bg: linear-gradient(145deg, #ab47bc, #8e24aa);
+  --tier-a-glow: #ab47bc;
+  --tier-b-bg: linear-gradient(145deg, #42a5f5, #1e88e5);
+  --tier-c-bg: linear-gradient(145deg, #66bb6a, #43a047);
+  --tier-d-bg: linear-gradient(145deg, #bdbdbd, #9e9e9e);
+  --tier-f-bg: linear-gradient(145deg, #78909c, #546e7a);
+  --tier-ss-bg: linear-gradient(145deg, #ff3d00, #dd2c00);
+  --tier-ss-glow: #ff3d00;
+  --tier-sss-bg: var(--rarity-cosmic-bg);
+  --tier-sss-glow: #f5f5f5;
+  
+  /* Rarity Colors */
+  --rarity-common: #9E9E9E;
+  --rarity-uncommon: #66BB6A;
+  --rarity-rare: #42A5F5;
+  --rarity-epic: #AB47BC;
+  --rarity-legendary: #FFB300;
+  --rarity-mythic: #E53935;
+  --rarity-godly: #FFFFFF; /* Special Case */
+  --rarity-unique: #00E5FF;
+  --rarity-supreme: #2979FF;
+  --rarity-genesis: #EEEEEE;
+  --rarity-cosmic: #FFFFFF; /* Special Case */
+  
+  /* Rarity Glow & BG Colors (RGB for opacity) */
+  --rgb-rarity-common: 158, 158, 158;
+  --rgb-rarity-uncommon: 102, 187, 106;
+  --rgb-rarity-rare: 66, 165, 245;
+  --rgb-rarity-epic: 171, 71, 188;
+  --rgb-rarity-legendary: 255, 179, 0;
+  --rgb-rarity-mythic: 229, 57, 53;
+  --rgb-rarity-unique: 0, 229, 255;
+  --rgb-rarity-supreme: 41, 121, 255;
+  --rgb-rarity-genesis: 238, 238, 238;
+
+  /* Shadows */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 6px 20px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 10px 30px rgba(0,0,0,0.4);
+
+  /* RGB values for robust RGBA backgrounds */
+  --rgb-bg-primary: 13, 12, 29;
+  --rgb-bg-secondary: 46, 52, 64;
+  --rgb-bg-tertiary: 40, 45, 55;
+  --rgb-bg-interactive: 56, 62, 74;
+  --rgb-bg-interactive-hover: 67, 76, 94;
+  --rgb-border-primary: 67, 76, 94;
+  --rgb-accent-success: 44, 218, 157;
+  --rgb-accent-warning: 255, 160, 0;
+  --rgb-accent-danger: 216, 60, 60;
+  --rgb-accent-pink: 240, 44, 132;
+  --rgb-accent-pc: 255, 215, 0; /* Gold */
+  --rgb-accent-npc: 41, 221, 197; /* Cyan */
+  --rgb-accent-item: 216, 60, 60;
+  --rgb-accent-loc: 126, 231, 135;
+  --rgb-accent-faction: 255, 123, 114;
+  --rgb-accent-monster: 155, 89, 182;
+  --rgb-menu-btn-ai: var(--rgb-accent-success);
+  --rgb-menu-btn-about: 40, 180, 99;
+  --rgb-menu-btn-create: 39, 184, 165;
+  --rgb-rarity-epic-old: 171, 71, 188;
+  --rgb-rarity-legendary-old: 255, 213, 79;
+  --rgb-rarity-mythic-old: 211, 47, 47;
+  --rgb-accent-violet: 171, 71, 188;
+  --rgb-accent-slate-blue: 120, 144, 156;
+  --rgb-accent-info-blue: 66, 165, 245;
+
+  /* Readout Block */
+  --bg-readout: #2c2f33;
+  --border-readout: #40444b;
+  --accent-readout: var(--accent-warning);
+}
+
+.theme-light {
+  --bg-primary: #E9ECEF;
+  --bg-secondary: linear-gradient(170deg, #F8F9FA, #E9ECEF);
+  --bg-tertiary: linear-gradient(170deg, #E9ECEF, #DEE2E6);
+  --bg-interactive: #DEE2E6;
+  --bg-interactive-hover: #CED4DA;
+  --border-primary: #CED4DA;
+  --text-primary: #212529;
+  --text-secondary: #495057;
+  --text-muted: #6C757D;
+  --text-placeholder: #ADB5BD;
+
+  /* REFACTORED: Define base colors */
+  --accent-primary-base: #007BFF;
+  --accent-secondary-base: #6F42C1;
+  --rgb-accent-primary-base: 0, 123, 255;
+  --rgb-accent-secondary-base: 111, 66, 193;
+
+  /* REFACTORED: Use overrides */
+  --accent-primary: var(--user-accent-primary, var(--accent-primary-base));
+  --accent-secondary: var(--user-accent-secondary, var(--accent-secondary-base));
+  --rgb-accent-primary: var(--user-rgb-accent-primary, var(--rgb-accent-primary-base));
+  --rgb-accent-secondary: var(--user-rgb-accent-secondary, var(--rgb-accent-secondary-base));
+  
+  --accent-success: #28A745;
+  --accent-warning: #FFC107;
+  --accent-danger: #DC3545;
+  --accent-pink: #D81B60;
+  --text-on-accent: #FFFFFF;
+  --accent-pc: #B8860B;
+  --accent-npc: #17A2B8;
+  --accent-item: #C82333;
+  --accent-loc: #218838;
+  --accent-faction: #D9534F;
+  --accent-monster: #8E44AD;
+  --menu-btn-ai: var(--accent-success);
+  --menu-btn-create: #007BFF;
+  --menu-btn-about: #28A745;
+  --menu-btn-load: #6F42C1;
+  --menu-btn-api-keys: var(--accent-danger);
+  --menu-btn-settings: #6C757D;
+  --text-on-accent-muted: #FFFFFF;
+
+  /* NEW: Status Colors */
+  --accent-violet: #9c27b0; /* Negative psychological status */
+  --accent-slate-blue: #90a4ae; /* Complex psychological status */
+  --accent-info-blue: #03a9f4; /* Positive psychological status */
+
+  /* Skill Tier Colors */
+  --tier-s-bg: linear-gradient(145deg, #ffc107, #ff8f00);
+  --tier-s-glow: #ffc107;
+  --tier-a-bg: linear-gradient(145deg, #9c27b0, #7b1fa2);
+  --tier-a-glow: #e1bee7;
+  --tier-b-bg: linear-gradient(145deg, #03a9f4, #0288d1);
+  --tier-c-bg: linear-gradient(145deg, #4caf50, #388e3c);
+  --tier-d-bg: linear-gradient(145deg, #e0e0e0, #bdbdbd);
+  --tier-f-bg: linear-gradient(145deg, #90a4ae, #607d8b);
+  --tier-ss-bg: linear-gradient(145deg, #ff6e40, #ff3d00);
+  --tier-ss-glow: #ff6e40;
+  --tier-sss-bg: var(--rarity-cosmic-bg);
+  --tier-sss-glow: #212121;
+  
+  /* Rarity Colors */
+  --rarity-common: #6C757D;
+  --rarity-uncommon: #28A745;
+  --rarity-rare: #007BFF;
+  --rarity-epic: #8E44AD;
+  --rarity-legendary: #FFA000;
+  --rarity-mythic: #C62828;
+  --rarity-godly: #212121;
+  --rarity-unique: #00BFA5;
+  --rarity-supreme: #0062E6;
+  --rarity-genesis: #424242;
+  --rarity-cosmic: #212121;
+  
+  /* Rarity Glow & BG Colors (RGB for opacity) */
+  --rgb-rarity-common: 108, 117, 125;
+  --rgb-rarity-uncommon: 40, 167, 69;
+  --rgb-rarity-rare: 0, 123, 255;
+  --rgb-rarity-epic: 142, 68, 173;
+  --rgb-rarity-legendary: 255, 160, 0;
+  --rgb-rarity-mythic: 198, 40, 40;
+  --rgb-rarity-unique: 0, 191, 165;
+  --rgb-rarity-supreme: 0, 98, 230;
+  --rgb-rarity-genesis: 66, 66, 66;
+
+  /* Shadows */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 6px 20px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.15);
+
+  --rgb-bg-primary: 233, 236, 239;
+  --rgb-bg-secondary: 248, 249, 250;
+  --rgb-bg-tertiary: 233, 236, 239;
+  --rgb-bg-interactive: 222, 226, 230;
+  --rgb-bg-interactive-hover: 206, 212, 218;
+  --rgb-border-primary: 206, 212, 218;
+  --rgb-accent-success: 40, 167, 69;
+  --rgb-accent-warning: 255, 193, 7;
+  --rgb-accent-danger: 220, 53, 69;
+  --rgb-accent-pink: 216, 27, 96;
+  --rgb-accent-pc: 184, 134, 11;
+  --rgb-accent-npc: 23, 162, 184;
+  --rgb-accent-item: 200, 35, 51;
+  --rgb-accent-loc: 33, 136, 56;
+  --rgb-accent-faction: 217, 83, 79;
+  --rgb-accent-monster: 142, 68, 173;
+  --rgb-menu-btn-ai: var(--rgb-accent-success);
+  --rgb-menu-btn-about: 40, 167, 69;
+  --rgb-menu-btn-create: 0, 123, 255;
+  --rgb-rarity-epic-old: 156, 39, 176;
+  --rgb-rarity-legendary-old: 255, 193, 7;
+  --rgb-rarity-mythic-old: 229, 57, 53;
+  --rgb-accent-violet: 156, 39, 176;
+  --rgb-accent-slate-blue: 144, 164, 174;
+  --rgb-accent-info-blue: 3, 169, 244;
+
+  /* Readout Block */
+  --bg-readout: #fafafa;
+  --border-readout: #dee2e6;
+  --accent-readout: #8d6e63;
+}
+
+/* --- Base Body & App Container Styles --- */
+body {
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  box-sizing: border-box;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+html {
+    font-size: var(--base-font-size);
+}
+
+#root {
+  width: 100%;
+  min-height: 100dvh;
+}
+
+.app-container {
+    width: 100%;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    transition: background-color 0.3s ease;
+    background-color: transparent; /* Changed to transparent for background image */
+    position: relative;
+    z-index: 1;
+    overflow: hidden; /* Contain pseudo-elements */
+}
+
+/* Background Image Layer */
+.app-background-image {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    z-index: -2; /* Behind overlay and content */
+    animation: background-fade-in 0.8s ease-out;
+    transition: filter 0.5s ease-out; /* Add transition for blur effect */
+}
+
+/* Blur background in game view for better text focus */
+.game-view .app-background-image {
+    filter: blur(8px);
+    transform: scale(1.05); /* Avoid blurred edges */
+}
+
+/* Overlay for readability */
+.app-background-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.35); /* Dark overlay */
+    z-index: -1; /* Between background and content */
+}
+.theme-light .app-background-overlay {
+    background-color: rgba(233, 236, 239, 0.4); /* Less bright gray overlay */
+}
+
+.app-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.3) 100%);
+    pointer-events: none;
+    z-index: 0; /* Above the BG image overlay */
+    opacity: 0.7;
+    transition: background 0.3s ease;
+}
+
+.app-container::after {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 10% 20%, rgba(var(--rgb-accent-secondary), 0.25) 0%, transparent 40%),
+    radial-gradient(circle at 90% 30%, rgba(var(--rgb-accent-primary), 0.2) 0%, transparent 50%),
+    radial-gradient(circle at 50% 80%, rgba(var(--rgb-accent-pink), 0.25) 0%, transparent 45%);
+  background-size: 200% 200%;
+  opacity: 0; /* Start hidden, fade in */
+  filter: blur(120px);
+  -webkit-filter: blur(120px);
+  animation: 
+    aurora-glow 30s ease-in-out infinite alternate,
+    aurora-fade-in 4s 1s ease-out forwards;
+  pointer-events: none;
+}
+
+.theme-light .app-container::after {
+  background: 
+    radial-gradient(circle at 10% 20%, rgba(var(--rgb-accent-secondary), 0.15) 0%, transparent 40%),
+    radial-gradient(circle at 90% 30%, rgba(var(--rgb-accent-primary), 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 50% 80%, rgba(var(--rgb-accent-pink), 0.15) 0%, transparent 45%);
+}
+
+.theme-light .app-container::before {
+    background: radial-gradient(ellipse at center, transparent 60%, rgba(0,0,0,0.10) 100%);
+}
+
+.app-container.menu-view {
+    background-color: var(--bg-primary);
+    background-image: 
+        /* Central spotlight on the card */
+        radial-gradient(ellipse at 50% 45%, rgba(var(--rgb-accent-secondary), 0.25) 0%, transparent 40%),
+        /* Left figure hint */
+        radial-gradient(ellipse at 15% 70%, rgba(var(--rgb-accent-pink), 0.25) 0%, transparent 35%),
+        /* Right figure hint */
+        radial-gradient(ellipse at 85% 70%, rgba(var(--rgb-accent-primary), 0.2) 0%, transparent 35%),
+        /* Top ambience */
+        radial-gradient(ellipse at 50% 0%, rgba(var(--rgb-accent-primary), 0.15) 0%, transparent 50%);
+    background-repeat: no-repeat;
+}
+
+.menu-view {
+    justify-content: center;
+    align-items: center;
+}
+
+.menu-view::after {
+    opacity: 0.5; /* Tone down the default aurora */
+}
+
+.creator-view, .game-view {
+    justify-content: flex-start;
+}
+
+/* Fix for invisible dropdown options */
+select option, select optgroup {
+  color: var(--text-primary);
+  background-color: var(--bg-primary);
+}
+
+.theme-light select option, .theme-light select optgroup {
+  color: #000000;
+  background-color: #FFFFFF;
+}
+
+select optgroup {
+  font-weight: bold;
+  background-color: var(--bg-tertiary);
+  color: var(--text-secondary);
+}
+
+
+/* --- Base Button & Interactive Element Styles (Optimized & Accessible) --- */
+/* 
+  This block defines the base styles for all primary interactive elements.
+  - It uses `:where` to keep specificity at zero, allowing for easy overrides without !important.
+  - It enhances UX and accessibility with clear visual feedback for hover, focus, and active states.
+*/
+:where(
+  .menu-button, .wc-button, .wc-button-icon, .nav-button, .confirmation-button, 
+  .save-card-actions button, .load-game-upload-button, .load-game-back-button, 
+  .skill-delete-button, .custom-action-button, .action-button, .history-revert-button, 
+  .memory-pin-button, .memory-delete-button, .lore-button, .char-detail-tab-button, 
+  .relationship-list-item, .quest-item, .kb-item, .save-card,
+  .api-key-check-btn, .api-key-close-btn
+) {
+  cursor: pointer;
+  /* Base for accessibility focus ring. It's invisible until :focus-visible is matched. */
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  /* Define all transitions in one place for maintainability. */
+  transition: 
+    transform var(--interactive-transition-duration) ease-out, 
+    background-color 0.2s ease, 
+    color 0.2s ease, 
+    opacity 0.2s ease, 
+    border-color 0.2s ease, 
+    box-shadow 0.2s ease,
+    outline-color var(--interactive-transition-duration) ease;
+}
+
+/* 
+  HOVER & FOCUS STATE (for mouse and keyboard users)
+  Provides a consistent "lift" effect to indicate interactivity.
+  Controlled by the --interactive-transform CSS variable for easy disabling.
+*/
+:where(
+  .menu-button, .wc-button, .wc-button-icon, .nav-button, .confirmation-button, .save-card-actions button, .load-game-upload-button, .load-game-back-button, .skill-delete-button, .custom-action-button, .action-button, .history-revert-button, .memory-pin-button, .memory-delete-button, .lore-button, .char-detail-tab-button, .relationship-list-item, .quest-item, .kb-item, .save-card,
+  .api-key-check-btn, .api-key-close-btn
+):where(:hover, :focus-visible):not(:disabled) {
+  transform: var(--interactive-transform);
+}
+
+/* 
+  FOCUS-VISIBLE STATE (for keyboard/assistive tech users)
+  This adds the visible outline ONLY on keyboard focus, enhancing accessibility.
+*/
+:where(
+  .menu-button, .wc-button, .wc-button-icon, .nav-button, .confirmation-button, .save-card-actions button, .load-game-upload-button, .load-game-back-button, .skill-delete-button, .custom-action-button, .action-button, .history-revert-button, .memory-pin-button, .memory-delete-button, .lore-button, .char-detail-tab-button, .relationship-list-item, .quest-item, .kb-item, .save-card,
+  .api-key-check-btn, .api-key-close-btn
+):focus-visible:not(:disabled) {
+  outline-color: var(--accent-secondary);
+}
+
+/* 
+  ACTIVE STATE (on click/activation)
+  Provides a "press down" effect for satisfying tactile feedback.
+*/
+:where(
+  .menu-button, .wc-button, .wc-button-icon, .nav-button, .confirmation-button, .save-card-actions button, .load-game-upload-button, .load-game-back-button, .skill-delete-button, .custom-action-button, .action-button, .history-revert-button, .memory-pin-button, .memory-delete-button, .lore-button, .char-detail-tab-button, .relationship-list-item, .quest-item, .kb-item, .save-card,
+  .api-key-check-btn, .api-key-close-btn
+):active:not(:disabled) {
+  transform: translateY(1px);
+  /* Make the press feel more responsive and snappy. */
+  transition-duration: 0.05s;
+}
+
+/* --- NEW: Item Rarity System --- */
+.rarity--pho-thong { --rarity-color: var(--rarity-common); --rgb-rarity-color: var(--rgb-rarity-common); }
+.rarity--cao-cap { --rarity-color: var(--rarity-uncommon); --rgb-rarity-color: var(--rgb-rarity-uncommon); }
+.rarity--hiem { --rarity-color: var(--rarity-rare); --rgb-rarity-color: var(--rgb-rarity-rare); }
+.rarity--su-thi { --rarity-color: var(--rarity-epic); --rgb-rarity-color: var(--rgb-rarity-epic); }
+.rarity--huyen-thoai { --rarity-color: var(--rarity-legendary); --rgb-rarity-color: var(--rgb-rarity-legendary); }
+.rarity--than-thoai { --rarity-color: var(--rarity-mythic); --rgb-rarity-color: var(--rgb-rarity-mythic); }
+.rarity--godly { --rarity-color: var(--rarity-godly); }
+.rarity--unique { --rarity-color: var(--rarity-unique); --rgb-rarity-color: var(--rgb-rarity-unique); }
+.rarity--supreme { --rarity-color: var(--rarity-supreme); --rgb-rarity-color: var(--rgb-rarity-supreme); }
+.rarity--genesis { --rarity-color: var(--rarity-genesis); --rgb-rarity-color: var(--rgb-rarity-genesis); }
+.rarity--cosmic { --rarity-color: var(--rarity-cosmic); }
+
+/* Apply rarity colors to text */
+.rarity--pho-thong, .rarity--cao-cap, .rarity--hiem, .rarity--su-thi,
+.rarity--huyen-thoai, .rarity--than-thoai, .rarity--godly, .rarity--unique,
+.rarity--supreme, .rarity--genesis, .rarity--cosmic {
+  color: var(--rarity-color) !important;
+}
+
+/* Apply border, background, and glow to item cards/slots */
+.inventory-item-card.rarity--pho-thong, .equipment-slot-item.rarity--pho-thong, .recipe-card.rarity--pho-thong, .item-tooltip.rarity--pho-thong, .item-detail-modal.rarity--pho-thong,
+.inventory-item-card.rarity--cao-cap, .equipment-slot-item.rarity--cao-cap, .recipe-card.rarity--cao-cap, .item-tooltip.rarity--cao-cap, .item-detail-modal.rarity--cao-cap,
+.inventory-item-card.rarity--hiem, .equipment-slot-item.rarity--hiem, .recipe-card.rarity--hiem, .item-tooltip.rarity--hiem, .item-detail-modal.rarity--hiem,
+.inventory-item-card.rarity--su-thi, .equipment-slot-item.rarity--su-thi, .recipe-card.rarity--su-thi, .item-tooltip.rarity--su-thi, .item-detail-modal.rarity--su-thi,
+.inventory-item-card.rarity--huyen-thoai, .equipment-slot-item.rarity--huyen-thoai, .recipe-card.rarity--huyen-thoai, .item-tooltip.rarity--huyen-thoai, .item-detail-modal.rarity--huyen-thoai,
+.inventory-item-card.rarity--than-thoai, .equipment-slot-item.rarity--than-thoai, .recipe-card.rarity--than-thoai, .item-tooltip.rarity--than-thoai, .item-detail-modal.rarity--than-thoai,
+.inventory-item-card.rarity--unique, .equipment-slot-item.rarity--unique, .recipe-card.rarity--unique, .item-tooltip.rarity--unique, .item-detail-modal.rarity--unique,
+.inventory-item-card.rarity--supreme, .equipment-slot-item.rarity--supreme, .recipe-card.rarity--supreme, .item-tooltip.rarity--supreme, .item-detail-modal.rarity--supreme,
+.inventory-item-card.rarity--genesis, .equipment-slot-item.rarity--genesis, .recipe-card.rarity--genesis, .item-tooltip.rarity--genesis, .item-detail-modal.rarity--genesis {
+    border-width: 2px;
+    border-color: var(--rarity-color);
+    background: radial-gradient(ellipse at center, rgba(var(--rgb-rarity-color), 0.2) 0%, transparent 70%);
+    box-shadow: 0 0 10px rgba(var(--rgb-rarity-color), 0.4);
+}
+.theme-light .inventory-item-card.rarity--pho-thong, .theme-light .equipment-slot-item.rarity--pho-thong {
+    background: radial-gradient(ellipse at center, rgba(var(--rgb-rarity-color), 0.1) 0%, transparent 70%);
+}
+
+.inventory-item-card.rarity--godly, .equipment-slot-item.rarity--godly, .recipe-card.rarity--godly, .item-tooltip.rarity--godly, .item-detail-modal.rarity--godly {
+    border-width: 2px;
+    border-color: #fff;
+    background: var(--rarity-godly-bg);
+    background-size: 400% 400%;
+    animation: rarity-godly-move 8s ease infinite;
+    box-shadow: 0 0 15px #fff, 0 0 25px #fff;
+}
+
+.inventory-item-card.rarity--cosmic, .equipment-slot-item.rarity--cosmic, .recipe-card.rarity--cosmic, .item-tooltip.rarity--cosmic, .item-detail-modal.rarity--cosmic {
+    border-width: 2px;
+    border-color: #fff;
+    background: var(--rarity-cosmic-bg);
+    background-size: 400% 400%;
+    animation: rarity-godly-move 6s ease infinite;
+    box-shadow: 0 0 15px #fff, 0 0 25px #fff;
+}

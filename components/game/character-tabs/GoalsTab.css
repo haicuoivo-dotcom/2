@@ -1,0 +1,67 @@
+/**
+ * @license
+ * SPDX-License-Identifier: Apache-2.0
+*/
+
+.goal-list-ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.goal-item-container {
+    background-color: rgba(var(--rgb-bg-tertiary), 0.2);
+    padding: 1rem;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-primary);
+    margin-bottom: 1rem;
+    animation: slide-up-fade-in 0.4s ease-out;
+}
+
+.goal-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.goal-title {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.goal-description {
+    margin: 0;
+    color: var(--text-secondary);
+    font-style: italic;
+    line-height: 1.6;
+}
+
+.goal-status-badge {
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.goal-status-badge.active {
+    background-color: var(--accent-secondary);
+    color: white;
+}
+
+.goal-status-badge.completed {
+    background-color: var(--accent-success);
+    color: var(--text-on-accent);
+}
+
+.goal-status-badge.abandoned {
+    background-color: var(--bg-interactive);
+    color: var(--text-muted);
+}
+
+.goal-status-badge.unknown {
+    background-color: var(--bg-tertiary);
+    color: var(--text-secondary);
+}

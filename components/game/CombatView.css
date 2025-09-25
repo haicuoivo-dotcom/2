@@ -1,0 +1,315 @@
+/**
+ * @license
+ * SPDX-License-Identifier: Apache-2.0
+*/
+
+.combat-view-grid {
+    flex-grow: 1;
+    display: grid;
+    grid-template-columns: 1fr 1.2fr 1fr; /* Opponents | Log/Actions | Party */
+    align-items: stretch;
+    padding: 1rem;
+    gap: 1rem;
+    overflow: hidden;
+    min-height: 0;
+}
+
+/* ADDED for mobile character panel layout */
+.combat-character-groups-container {
+    display: contents; /* Default to no effect on desktop */
+}
+
+
+/* NEW: Styles for character group columns */
+.combat-group-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    min-height: 0;
+    background-color: rgba(var(--rgb-bg-secondary), 0.6);
+    border: 1px solid var(--border-primary);
+    border-radius: var(--radius-lg);
+    padding: 1rem;
+}
+
+.combat-group-title {
+    margin: 0 0 0.5rem;
+    font-size: 16px;
+    text-align: center;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--border-primary);
+    padding-bottom: 0.75rem;
+    flex-shrink: 0;
+}
+
+.combat-group-list {
+    flex-grow: 1;
+    overflow-y: auto;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    align-content: start;
+    gap: 1rem;
+    padding: 0.25rem;
+    margin: -0.25rem;
+    scrollbar-width: thin;
+    scrollbar-color: var(--bg-interactive) transparent;
+}
+.combat-group-list::-webkit-scrollbar {
+    width: 8px;
+}
+.combat-group-list::-webkit-scrollbar-track {
+    background: transparent;
+}
+.combat-group-list::-webkit-scrollbar-thumb {
+    background-color: var(--bg-interactive);
+    border-radius: 4px;
+}
+
+
+/* --- Middle Column: Log & Actions (Mostly unchanged internally) --- */
+.combat-log-and-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    min-width: 0;
+}
+.combat-log-panel {
+    height: 30vh;
+    background-color: rgba(var(--rgb-bg-tertiary), 0.6);
+    border: 1px solid var(--border-primary);
+    border-radius: var(--radius-lg);
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+.combat-log-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    overflow-y: auto;
+    flex-grow: 1;
+    scrollbar-width: thin;
+}
+.combat-log-entry {
+    padding: 0.5rem;
+    border-bottom: 1px dashed var(--border-primary);
+    font-style: italic;
+    color: var(--text-secondary);
+    animation: slide-up-fade-in 0.4s ease-out;
+    font-size: 15px;
+}
+.combat-log-entry:last-child {
+    border-bottom: none;
+}
+.combat-log-entry.round-marker {
+    text-align: center;
+    font-weight: bold;
+    color: var(--accent-primary);
+    background-color: rgba(var(--rgb-accent-primary), 0.1);
+    border-radius: var(--radius-sm);
+    padding: 0.25rem;
+    margin: 0.5rem 0;
+    border-bottom: none;
+    font-style: normal;
+}
+
+.combat-actions-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    flex-shrink: 0;
+}
+
+.combat-actions-panel {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    flex-shrink: 0;
+    min-height: 136px;
+    align-content: start;
+}
+.combat-actions-panel .action-button {
+    height: 60px;
+    font-size: 1rem;
+    text-align: center;
+    justify-content: center;
+}
+
+/* --- NEW: Tactical Command Board --- */
+.combat-command-board {
+    display: flex;
+    gap: 0.5rem;
+    width: 100%;
+}
+
+.tactical-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 0.5rem;
+    flex-grow: 1;
+}
+
+.side-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 140px;
+    flex-shrink: 0;
+}
+
+.tactical-button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.75rem;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-primary);
+    background: linear-gradient(145deg, var(--bg-interactive-hover), var(--bg-interactive));
+    color: var(--text-primary);
+    font-weight: 600;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: center;
+    min-height: 60px;
+}
+
+.tactical-button:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    border-color: var(--accent-secondary);
+}
+
+.tactical-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background: var(--bg-tertiary);
+}
+
+.tactical-button svg {
+    width: 24px;
+    height: 24px;
+}
+
+.tactical-button.lethal-strike {
+    background: linear-gradient(145deg, #e74c3c, var(--accent-danger));
+    color: white;
+}
+.tactical-button.subduing-blow {
+    background: linear-gradient(145deg, #3498db, var(--accent-primary));
+    color: white;
+}
+.tactical-button.warning-shot {
+    background: linear-gradient(145deg, #f39c12, var(--accent-warning));
+    color: var(--text-on-accent);
+}
+
+
+/* NEW: Submenu Styles */
+.combat-submenu-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+    width: 100%;
+}
+.combat-submenu-actions .action-button {
+    height: auto;
+    min-height: 44px;
+    padding: 0.6rem;
+    font-size: 13px;
+    text-align: left;
+    justify-content: flex-start;
+}
+.combat-submenu-actions .command-back {
+    grid-column: 1 / -1; /* Span full width */
+    background: var(--bg-interactive);
+    justify-content: center;
+}
+
+
+.combat-status-indicator {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    color: var(--text-muted);
+    font-style: italic;
+    height: 100%;
+}
+
+.auto-combat-button {
+    width: 100%;
+    font-size: 1.1rem !important;
+    height: 50px !important;
+    justify-content: center;
+}
+.auto-combat-button.stop {
+    background: linear-gradient(145deg, #F05A5A, var(--accent-danger));
+    color: white;
+}
+.auto-combat-button.start {
+    background: linear-gradient(145deg, var(--accent-success), var(--menu-btn-ai));
+    color: white;
+}
+
+/* --- Responsive (Mobile) Layout --- */
+body[data-mobile-mode="on"] .combat-view-grid {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr; /* Top panels, then log/actions */
+    padding: 0.5rem;
+    gap: 0.5rem;
+}
+
+body[data-mobile-mode="on"] .combat-character-groups-container {
+    display: grid;
+    grid-template-columns: 1fr; /* Stack panels on mobile */
+    gap: 0.5rem;
+    order: 1;
+}
+
+body[data-mobile-mode="on"] .combat-log-and-actions {
+    order: 2;
+}
+
+/* NEW: Make characters stack vertically inside their panels on mobile */
+body[data-mobile-mode="on"] .combat-group-list {
+    grid-template-columns: 1fr;
+}
+
+
+body[data-mobile-mode="on"] .combat-actions-panel {
+    grid-template-columns: 1fr;
+}
+body[data-mobile-mode="on"] .combat-command-menu,
+body[data-mobile-mode="on"] .combat-submenu-actions {
+    grid-template-columns: 1fr 1fr;
+}
+
+body[data-mobile-mode="on"] .tactical-grid {
+    grid-template-rows: auto;
+}
+
+body[data-mobile-mode="on"] .combat-command-board {
+    flex-direction: column;
+}
+
+body[data-mobile-mode="on"] .side-actions {
+    width: 100%;
+    flex-direction: row;
+}
+
+body[data-mobile-mode="on"] .side-actions .tactical-button {
+    flex-grow: 1;
+}
+
+
+/* DEPRECATED STYLES - Can be removed later */
+.combat-main-actions, .combat-intent-dropdown {
+    display: none;
+}

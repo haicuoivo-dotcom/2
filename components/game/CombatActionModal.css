@@ -1,0 +1,70 @@
+/**
+ * @license
+ * SPDX-License-Identifier: Apache-2.0
+*/
+.combat-action-overlay {
+    z-index: 1001; /* Above the game view, below other modals */
+}
+
+.combat-action-modal {
+    max-width: 450px;
+    max-height: 70vh;
+}
+
+.combat-action-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.combat-action-item {
+    padding: 1rem;
+    border-bottom: 1px solid var(--border-primary);
+    cursor: pointer;
+    transition: background-color 0.2s;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+
+.combat-action-item:last-child {
+    border-bottom: none;
+}
+
+.combat-action-item:hover {
+    background-color: var(--bg-interactive-hover);
+}
+
+.item-info-wrapper {
+    flex-grow: 1;
+}
+
+.combat-action-item .item-name {
+    display: block;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.25rem;
+}
+
+.combat-action-item .item-description {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.item-quantity-badge {
+    background-color: var(--accent-secondary);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    flex-shrink: 0;
+}

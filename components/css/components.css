@@ -1,0 +1,506 @@
+/* --- Spinner Styles --- */
+.spinner {
+  display: inline-block;
+  border-radius: var(--radius-full);
+  border-style: solid;
+  border-color: var(--text-muted);
+  border-top-color: var(--accent-primary);
+  animation: spin 1s linear infinite;
+}
+.spinner-sm {
+  width: 14px;
+  height: 14px;
+  border-width: 2px;
+}
+.spinner-md {
+  width: 20px;
+  height: 20px;
+  border-width: 2px;
+}
+.spinner-lg {
+  width: var(--space-12);
+  height: var(--space-12);
+  border-width: 4px;
+}
+
+/* --- Skill Tier Badge Library --- */
+.skill-tier-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: var(--radius-md);
+  color: white;
+  font-weight: 700;
+  font-size: 1rem;
+  text-align: center;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.2);
+  min-width: 80px;
+}
+
+.skill-tier-badge.tier--s {
+  background: var(--tier-s-bg);
+  animation: tier-s-glow 2s infinite ease-in-out;
+}
+.skill-tier-badge.tier--a {
+  background: var(--tier-a-bg);
+  animation: tier-a-glow 3s infinite ease-in-out;
+}
+.skill-tier-badge.tier--b { background: var(--tier-b-bg); }
+.skill-tier-badge.tier--c { background: var(--tier-c-bg); }
+.skill-tier-badge.tier--d {
+  background: var(--tier-d-bg);
+  color: #333;
+  text-shadow: none;
+}
+.skill-tier-badge.tier--f { background: var(--tier-f-bg); }
+.skill-tier-badge.tier--ss {
+  background: var(--tier-ss-bg);
+  animation: tier-ss-glow 1.8s infinite ease-in-out;
+}
+.skill-tier-badge.tier--sss {
+  background: var(--tier-sss-bg);
+  background-size: 400% 400%;
+  animation: rarity-godly-move 6s ease infinite, tier-sss-glow 2.5s infinite ease-in-out;
+}
+
+/* --- Status Badge Library --- */
+/*
+  Examples:
+  - Tích cực (Vật lý): Tăng Công, Tăng Thủ, Hồi Phục, Lá Chắn...
+  - Tiêu cực (Vật lý): Trúng Độc, Chảy Máu, Bỏng, Suy Yếu...
+  - Khống chế: Choáng, Đóng Băng, Tê Liệt, Trói Buộc...
+  - Tâm lý Tích cực: Can Đảm, Tập Trung, Phấn Chấn...
+  - Tâm lý Tiêu cực: Hoảng Sợ, Bối Rối, Tuyệt Vọng...
+  - Tâm lý Phức tạp: Ám ảnh, Tò mò, Say mê...
+  - Trung lập: Ướt Sũng, Ẩn Thân, Đánh Dấu...
+*/
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 16px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  border: 1px solid;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.status-badge::before {
+  font-weight: bold;
+}
+/* Tích cực (Buff) */
+.status-badge.status--positive {
+  background-color: rgba(var(--rgb-accent-success), 0.1);
+  color: var(--accent-success);
+  border-color: rgba(var(--rgb-accent-success), 0.4);
+}
+.status-badge.status--positive::before { content: '▲'; }
+/* Tiêu cực (Debuff) */
+.status-badge.status--negative {
+  background-color: rgba(var(--rgb-accent-danger), 0.1);
+  color: var(--accent-danger);
+  border-color: rgba(var(--rgb-accent-danger), 0.4);
+}
+.status-badge.status--negative::before { content: '▼'; }
+/* Khống chế */
+.status-badge.status--control {
+  background-color: rgba(var(--rgb-accent-pink), 0.1);
+  color: var(--accent-pink);
+  border-color: rgba(var(--rgb-accent-pink), 0.4);
+}
+.status-badge.status--control::before { content: '✖'; }
+/* Tâm lý - Tích cực */
+.status-badge.status--psychological-positive {
+  background-color: rgba(var(--rgb-accent-info-blue), 0.1);
+  color: var(--accent-info-blue);
+  border-color: rgba(var(--rgb-accent-info-blue), 0.4);
+}
+.status-badge.status--psychological-positive::before { content: '🧠↑'; }
+/* Tâm lý - Tiêu cực */
+.status-badge.status--psychological-negative {
+  background-color: rgba(var(--rgb-accent-violet), 0.1);
+  color: var(--accent-violet);
+  border-color: rgba(var(--rgb-accent-violet), 0.4);
+}
+.status-badge.status--psychological-negative::before { content: '🧠↓'; }
+/* Tâm lý - Phức tạp */
+.status-badge.status--psychological-complex {
+  background-color: rgba(var(--rgb-accent-slate-blue), 0.1);
+  color: var(--accent-slate-blue);
+  border-color: rgba(var(--rgb-accent-slate-blue), 0.4);
+}
+.status-badge.status--psychological-complex::before { content: '🧠?'; }
+/* Trung lập */
+.status-badge.status--neutral {
+  background-color: rgba(var(--rgb-bg-interactive), 0.5);
+  color: var(--text-secondary);
+  border-color: rgba(var(--rgb-border-primary), 0.5);
+}
+.status-badge.status--neutral::before { content: '●'; font-size: 0.8em; }
+
+
+/* --- Reusable UI Component Styles --- */
+.form-field {
+  margin-bottom: var(--space-4);
+}
+.form-field label {
+  display: block;
+  margin-bottom: var(--space-2);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  color: var(--text-muted);
+}
+.field-hint {
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+  margin: var(--space-2) 0 0;
+}
+input, textarea, select {
+  background: rgba(var(--rgb-bg-interactive), 0.5);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  padding: var(--space-3) var(--space-4);
+  width: 100%;
+  box-sizing: border-box;
+  font-size: var(--font-size-base);
+  font-family: inherit;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+input:focus-visible, textarea:focus-visible, select:focus-visible {
+  outline: none;
+  border-color: var(--accent-secondary);
+  box-shadow: 0 0 0 3px rgba(var(--rgb-accent-secondary), 0.3);
+}
+input::placeholder, textarea::placeholder {
+  color: var(--text-placeholder);
+}
+.select-wrapper { position: relative; }
+.select-wrapper::after {
+  content: "▼";
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+  position: absolute;
+  right: var(--space-4);
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+select {
+  appearance: none; -webkit-appearance: none;
+  background-image: none;
+  padding-right: var(--space-8);
+}
+textarea { resize: vertical; }
+
+.wc-button, .lore-button {
+  width: 100%;
+  padding: 14px;
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2), inset 0 1px 1px rgba(255,255,255,0.1);
+}
+.wc-button:hover:not(:disabled), .lore-button:hover:not(:disabled) {
+  filter: brightness(1.1);
+}
+.wc-button:disabled, .lore-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.wc-button.button-reset {
+    background: linear-gradient(145deg, #6C757D, var(--menu-btn-settings));
+    color: white;
+}
+.wc-button.button-reset:hover:not(:disabled) {
+    background: linear-gradient(145deg, #868e96, #6C757D);
+}
+
+.no-info-placeholder {
+    text-align: center;
+    padding: 2rem;
+    color: var(--text-muted);
+    font-style: italic;
+    width: 100%;
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* NEW: Generic Data Display Components */
+.data-block {
+  background: rgba(var(--rgb-bg-secondary), 0.1);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem;
+}
+
+.section-title-bar {
+  margin: 0 0 1rem;
+  color: var(--text-secondary);
+  border-bottom: 1px solid rgba(var(--rgb-border-primary), 0.4);
+  padding-bottom: 0.75rem;
+  font-size: 1.1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.data-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.stat-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 0.3rem 0;
+  border-bottom: 1px solid rgba(var(--rgb-border-primary), 0.2);
+  font-size: 0.95rem;
+  position: relative; /* For tooltip positioning */
+  cursor: help;
+}
+.stat-line:last-child {
+  border-bottom: none;
+}
+.stat-line > span:first-child { /* Label */
+  color: var(--text-secondary);
+}
+.stat-line > span:last-child { /* Value */
+  font-weight: 600;
+  color: var(--text-primary);
+}
+.stat-line .positive { color: var(--accent-success); }
+.stat-line .negative { color: var(--accent-danger); }
+
+/* --- Custom Info Tooltip for Stats --- */
+.info-tooltip-content {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translate(-50%, calc(-100% - var(--space-2)));
+    z-index: 100;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-primary);
+    border-radius: var(--radius-md);
+    padding: var(--space-3);
+    width: max-content;
+    max-width: 300px;
+    box-shadow: var(--shadow-md);
+    pointer-events: none;
+    animation: modal-fade-in 0.2s ease-out;
+    white-space: normal;
+    font-size: var(--font-size-sm);
+    line-height: 1.6;
+    color: var(--text-secondary);
+    text-align: left;
+    font-weight: 400;
+}
+
+.info-tooltip-content .tooltip-divider {
+    border: none;
+    border-top: 1px solid var(--border-primary);
+    margin: var(--space-2) 0;
+}
+
+.info-tooltip-content .tooltip-line {
+    display: block;
+}
+.info-tooltip-content .tooltip-main-desc {
+    font-style: italic;
+    color: var(--text-primary);
+    margin-bottom: var(--space-2);
+}
+
+.info-tooltip-content .tooltip-source-line {
+    display: flex;
+    justify-content: space-between;
+}
+.info-tooltip-content .tooltip-source-modifier {
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+
+/* --- Reusable Add Stat Form --- */
+.add-stat-form {
+    padding: 1rem;
+    background-color: rgba(var(--rgb-bg-tertiary), 0.5);
+    border-radius: var(--radius-md);
+    margin-top: 1rem;
+    border: 1px solid var(--border-primary);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    animation: slide-up-fade-in 0.3s ease;
+}
+
+.add-stat-form-row {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.add-stat-form-row > .form-field {
+    flex: 1;
+    min-width: 150px;
+}
+
+.add-stat-form .form-field {
+    margin: 0;
+}
+
+.add-stat-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+}
+
+.add-stat-actions button {
+    padding: 8px 16px;
+    font-size: 0.9rem;
+}
+
+/* NEW: TTS Button */
+.tts-control-button {
+    padding: var(--space-2) !important;
+    width: 40px; /* Make it square */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.tts-control-button svg {
+    width: 20px;
+    height: 20px;
+}
+
+/* NEW: TTS Settings */
+.tts-preview-controls {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.tts-preview-controls .wc-button {
+    margin-top: 0;
+    padding: 10px 16px;
+    width: auto;
+}
+
+.tts-preview-controls .spinner {
+    margin-left: 0.5rem;
+}
+
+/* NEW: Star Rating Component */
+.star-rating {
+  display: inline-flex;
+  gap: 2px;
+  color: var(--text-muted);
+}
+
+.star-rating .star {
+  width: 1em;
+  height: 1em;
+  stroke-width: 1.5;
+  transition: color 0.2s ease-in-out;
+  filter: drop-shadow(0 1px 1px rgba(0,0,0,0.5));
+}
+
+.star-rating .star.filled {
+  color: #FFD700; /* Gold */
+}
+
+/* --- Enhanced Cheat Mode Input Fields --- */
+.inline-edit-input,
+.inline-edit-textarea,
+.entity-name-input,
+.money-value-input,
+.faction-resource-input {
+    background-color: rgba(var(--rgb-accent-warning), 0.05);
+    border: 1px solid rgba(var(--rgb-accent-warning), 0.5);
+    color: var(--accent-warning);
+    font-weight: 500;
+    transition: all 0.2s ease-in-out;
+}
+
+.inline-edit-input:focus,
+.inline-edit-textarea:focus,
+.entity-name-input:focus,
+.money-value-input:focus,
+.faction-resource-input:focus {
+    outline: none;
+    border-color: var(--accent-warning);
+    background-color: rgba(var(--rgb-accent-warning), 0.1);
+    box-shadow: 0 0 0 3px rgba(var(--rgb-accent-warning), 0.3);
+}
+
+.entity-name-input {
+    font-size: inherit;
+    font-weight: inherit;
+    padding: var(--space-1) var(--space-2);
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.money-value-input {
+    font-weight: 700;
+    font-size: 1.2rem;
+    text-align: center;
+    padding: 2px 6px;
+    width: 180px;
+    display: block;
+    margin: 0 auto;
+}
+
+/* --- Enhanced Cheat Mode Buttons --- */
+.edit-name-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-muted);
+    padding: var(--space-1);
+    border-radius: var(--radius-full);
+    transition: color 0.2s, background-color 0.2s, transform 0.2s, opacity 0.2s;
+    opacity: 0;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.entity-name-wrapper:hover .edit-name-button,
+.kb-item-name:hover .edit-name-button,
+.money-value-container:hover .edit-name-button {
+    opacity: 0.8;
+}
+
+.edit-name-button:hover {
+    color: var(--accent-warning);
+    background-color: rgba(var(--rgb-accent-warning), 0.15);
+    transform: scale(1.1);
+    opacity: 1;
+}
+
+.edit-name-button svg {
+    width: 0.9em;
+    height: 0.9em;
+    vertical-align: -0.1em;
+}

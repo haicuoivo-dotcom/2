@@ -1,0 +1,48 @@
+/**
+ * @license
+ * SPDX-License-Identifier: Apache-2.0
+*/
+
+/* Styles for grid buttons, copied from ExperienceSettingsTab.css for consistency */
+.processing-mode-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: var(--space-2);
+    margin-top: var(--space-2);
+}
+
+.processing-mode-button {
+    padding: var(--space-3);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-primary);
+    background-color: var(--bg-interactive);
+    color: var(--text-secondary);
+    font-weight: 500;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease-out;
+}
+
+.processing-mode-button:not(.active):hover {
+    background-color: var(--bg-interactive-hover);
+    border-color: var(--accent-secondary);
+    color: var(--text-primary);
+    transform: translateY(-2px);
+}
+
+.processing-mode-button.active {
+    background-color: var(--accent-secondary);
+    border-color: var(--accent-secondary);
+    color: white;
+    font-weight: 600;
+    box-shadow: 0 4px 10px rgba(var(--rgb-accent-secondary), 0.3);
+    transform: translateY(-2px);
+}
+
+.processing-mode-button input[type="radio"] {
+    /* Visually hide the radio button but keep it accessible */
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}

@@ -1,0 +1,76 @@
+/**
+ * @license
+ * SPDX-License-Identifier: Apache-2.0
+*/
+
+.settings-subsection {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border-primary);
+}
+
+.settings-subsection h5 {
+    font-size: 1rem;
+    color: var(--text-primary);
+    margin: 0 0 1.5rem;
+    text-align: center;
+}
+
+/* NEW: Styles for story tendency sliders */
+.tendency-sliders {
+    display: flex; /* Changed from grid to flex */
+    flex-wrap: wrap; /* Allow items to wrap to the next line */
+    gap: 1rem 2rem;
+    margin-top: 1rem;
+}
+
+.tendency-sliders .form-field {
+    margin-bottom: 0;
+    flex: 1 1 calc(33.333% - 2rem); /* Distribute items into roughly 3 columns */
+    box-sizing: border-box;
+    min-width: 250px; /* Ensure readability on smaller screens before wrapping */
+}
+
+/* NEW STYLES FOR AI PROCESSING MODE GRID */
+.processing-mode-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: var(--space-2);
+    margin-top: var(--space-2);
+}
+
+.processing-mode-button {
+    padding: var(--space-3);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-primary);
+    background-color: var(--bg-interactive);
+    color: var(--text-secondary);
+    font-weight: 500;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease-out;
+}
+
+.processing-mode-button:not(.active):hover {
+    background-color: var(--bg-interactive-hover);
+    border-color: var(--accent-secondary);
+    color: var(--text-primary);
+    transform: translateY(-2px);
+}
+
+.processing-mode-button.active {
+    background-color: var(--accent-secondary);
+    border-color: var(--accent-secondary);
+    color: white;
+    font-weight: 600;
+    box-shadow: 0 4px 10px rgba(var(--rgb-accent-secondary), 0.3);
+    transform: translateY(-2px);
+}
+
+.processing-mode-button input[type="radio"] {
+    /* Visually hide the radio button but keep it accessible */
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
