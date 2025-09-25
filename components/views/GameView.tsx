@@ -2,7 +2,7 @@
  * @license
  * SPDX-License-Identifier: Apache-2.0
 */
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import './GameView.css';
 import { GameModals } from '../game/GameModals';
 // FIX: Changed import path to use the refactored CombatView component.
@@ -40,6 +40,8 @@ interface GameViewProps {
 }
 
 export const GameView = (props: GameViewProps) => {
+    // ...existing code...
+    // ...existing code...
     const { modalManager, onNavigateToMenu, addToast, incrementApiRequestCount } = props;
     const { gameState: contextGameState, worldSettings, dispatch } = useGameContext();
 
@@ -174,6 +176,18 @@ export const GameView = (props: GameViewProps) => {
     });
     
     // Bỏ điều kiện return khi !gameState, luôn render giao diện game
+    // Tự động tóm tắt/gom nhóm ký ức dưới 75 điểm mỗi 50 lượt chơi
+    useEffect(() => {
+        if (!gameState || !gameState.history) return;
+        const turnCount = gameState.history.length;
+        if (turnCount > 0 && turnCount % 50 === 0) {
+            const memoriesToSummarize = (gameState.memories || []).filter(m => (m.relevanceScore || 0) < 75);
+            if (memoriesToSummarize.length > 0) {
+                // TODO: Thực hiện tóm tắt/gom nhóm ký ức ở đây (ví dụ: gửi lên API hoặc dispatch action)
+                addToast(`Có ${memoriesToSummarize.length} ký ức dưới 75 điểm cần tóm tắt/gom nhóm.`, 'info');
+            }
+        }
+    }, [gameState?.history?.length]);
     
     if (pendingEvent) {
         return <PreEventModal type={pendingEvent.type} onConfirm={handleConfirmEvent} onCancel={handleCancelEvent} opponentNames={pendingEvent.opponentNames} />;
@@ -199,6 +213,7 @@ export const GameView = (props: GameViewProps) => {
     return (
         <GameEngineProvider value={gameEngine}>
             <div className="game-container">
+                {/* Modal blocks: đảm bảo mỗi block JSX đều đóng đúng */}
                 {settings.showCombatView && processingError && (
                     <ErrorDetailModal
                         details={processingError}

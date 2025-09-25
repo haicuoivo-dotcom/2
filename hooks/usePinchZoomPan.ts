@@ -5,14 +5,17 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
 
 // --- Helper Functions ---
-const getDistance = (touches: TouchList) => {
+
+type TouchLike = { clientX: number; clientY: number };
+
+const getDistance = (touches: Array<TouchLike>) => {
     return Math.sqrt(
         Math.pow(touches[0].clientX - touches[1].clientX, 2) +
         Math.pow(touches[0].clientY - touches[1].clientY, 2)
     );
 };
 
-const getMidpoint = (touches: TouchList) => {
+const getMidpoint = (touches: Array<TouchLike>) => {
     return {
         x: (touches[0].clientX + touches[1].clientX) / 2,
         y: (touches[0].clientY + touches[1].clientY) / 2,
@@ -22,7 +25,7 @@ const getMidpoint = (touches: TouchList) => {
 const clamp = (value: number, min: number, max: number) => Math.min(Math.max(value, min), max);
 
 // --- Hook ---
-export const usePinchZoomPan = (containerRef: React.RefObject<HTMLElement>, dependencyToReset: any) => {
+export const usePinchZoomPan = (containerRef: React.RefObject<HTMLDivElement>, dependencyToReset: any) => {
     const [transform, setTransform] = useState({ scale: 1, offsetX: 0, offsetY: 0 });
     
     const initialGestureState = useRef<any>(null); // Store all initial state for a gesture
@@ -31,10 +34,10 @@ export const usePinchZoomPan = (containerRef: React.RefObject<HTMLElement>, depe
         if (e.touches.length > 2) return; // Ignore more than 2 fingers
 
         initialGestureState.current = {
-            // FIX: Add explicit types to resolve 'does not exist on type unknown' errors.
-            initialTouches: Array.from(e.touches).map((t: Touch) => ({ clientX: t.clientX, clientY: t.clientY })),
+            // Chỉ lấy thuộc tính chung để tránh lỗi kiểu giữa React.Touch và Touch
+            initialTouches: Array.from(e.touches).map((t) => ({ clientX: t.clientX, clientY: t.clientY })),
             initialTransform: { ...transform },
-            initialPinchDistance: e.touches.length === 2 ? getDistance(e.touches) : 0,
+            initialPinchDistance: e.touches.length === 2 ? getDistance(Array.from(e.touches).map((t) => ({ clientX: t.clientX, clientY: t.clientY }))) : 0,
         };
     }, [transform]);
 
@@ -46,7 +49,7 @@ export const usePinchZoomPan = (containerRef: React.RefObject<HTMLElement>, depe
 
         const { initialTouches, initialTransform, initialPinchDistance } = initialGestureState.current;
 
-        if (initialTouches.length === 1 && e.touches.length === 1) {
+    if (initialTouches.length === 1 && e.touches.length === 1) {
             // --- Panning ---
             if (transform.scale <= 1) return;
             e.preventDefault();
@@ -68,14 +71,15 @@ export const usePinchZoomPan = (containerRef: React.RefObject<HTMLElement>, depe
             
             setTransform(prev => ({ ...prev, offsetX: newOffsetX, offsetY: newOffsetY }));
 
-        } else if (initialTouches.length === 2 && e.touches.length === 2) {
+    } else if (initialTouches.length === 2 && e.touches.length === 2) {
             // --- Pinching ---
             e.preventDefault();
-            const currentPinchDistance = getDistance(e.touches);
+            const touchesArr = Array.from(e.touches).map((t) => ({ clientX: t.clientX, clientY: t.clientY }));
+            const currentPinchDistance = getDistance(touchesArr);
             const scaleMultiplier = currentPinchDistance / initialPinchDistance;
             const newScale = clamp(initialTransform.scale * scaleMultiplier, 1, 4);
 
-            const midpoint = getMidpoint(e.touches);
+            const midpoint = getMidpoint(touchesArr);
             const rect = container.getBoundingClientRect();
             const relativeMidpoint = { x: midpoint.x - rect.left, y: midpoint.y - rect.top };
 

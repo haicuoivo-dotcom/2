@@ -34,7 +34,7 @@ const AppContent = () => {
     const { openModal, closeModal } = modalManager;
 
     const zoomPanWrapperRef = useRef<HTMLDivElement>(null);
-    const { scale, offsetX, offsetY, eventHandlers } = usePinchZoomPan(zoomPanWrapperRef, appProps.currentView);
+    const { scale, offsetX, offsetY, eventHandlers } = usePinchZoomPan(zoomPanWrapperRef as React.RefObject<HTMLDivElement>, appProps.currentView);
 
     const isMenu = appProps.currentView === 'menu';
     const finalScale = isMenu ? 1 : scale;
@@ -161,14 +161,18 @@ const AppContentWrapper = () => {
         };
         window.addEventListener('beforeunload', handleBeforeUnload);
 
+        // Luôn chuyển về trang mặc định nếu reload từ trạng thái game/create
         if (sessionStorage.getItem('reloadedFromStatefulView')) {
-            sessionStorage.removeItem('reloadedFromStatefulView'); 
-            if (currentView !== 'menu') {
-                navigate('menu');
-                return () => window.removeEventListener('beforeunload', handleBeforeUnload);
-            }
+            sessionStorage.removeItem('reloadedFromStatefulView');
+            window.location.hash = '';
+            rawAddToast('Đã reload, chuyển về trang mặc định.', 'info');
+            setTimeout(() => {
+                window.location.reload();
+            }, 1500);
+            return () => window.removeEventListener('beforeunload', handleBeforeUnload);
         }
-        
+
+        // Nếu đang ở game mà không có playerContext, chuyển về menu
         if (currentView === 'game' && !playerContext) {
             navigate('menu');
             rawAddToast('Không có trò chơi nào đang hoạt động. Đang quay về menu chính.', 'warning');

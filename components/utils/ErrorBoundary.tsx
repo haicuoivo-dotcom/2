@@ -36,6 +36,15 @@ export class ErrorBoundary extends Component<Props, State> {
     };
 
     public render() {
+        // Nếu đã về MainMenu, tự động xóa trạng thái lỗi để không che giao diện menu
+        const isMainMenu = window.location.hash === '' || window.location.hash === '#menu';
+        if (this.state.hasError && isMainMenu) {
+            // Reset lỗi khi về menu
+            setTimeout(() => {
+                this.setState({ hasError: false, error: null, errorInfo: null });
+            }, 0);
+            return this.props.children;
+        }
         if (this.state.hasError) {
             return (
                 <div style={styles.container}>
@@ -54,8 +63,6 @@ export class ErrorBoundary extends Component<Props, State> {
                 </div>
             );
         }
-
-        // FIX: The prop 'props' does not exist on type 'ErrorBoundary'. It should be `this.props`.
         return this.props.children;
     }
 }
