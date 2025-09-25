@@ -18,9 +18,10 @@ interface MainMenuProps {
 }
 
 export const MainMenu = ({ onNavigate, onQuickPlay, hasSaves, areSavesLoading, onOpenApiKeyModal, onOpenSettingsModal, onOpenAboutModal, apiStatus, hasApiKey }: MainMenuProps) => (
-    <div className="card" aria-labelledby="menu-title">
-        <h1 className="title" id="menu-title">Hãy 'Bắn'<br />Theo Cách Của Bạn</h1>
-        <nav className="menu" aria-label="Main Menu">
+        <div className="main-menu-wrapper">
+            <div className="card" aria-labelledby="menu-title">
+    <h1 className="title" id="menu-title">Hãy 'Bắn'<br />Theo Cách Của Bạn</h1>
+    <nav className="menu" aria-label="Main Menu">
             <button 
                 className="menu-button button-play-now" 
                 onClick={onQuickPlay}
@@ -63,6 +64,7 @@ export const MainMenu = ({ onNavigate, onQuickPlay, hasSaves, areSavesLoading, o
                 {hasApiKey ? 'Quản lý API Key' : 'Thiết lập API Key'}
             </button>
         </nav>
-        <p className="api-status">{apiStatus}</p>
-    </div>
+                <p className="api-status">{apiStatus}</p>
+            </div>
+        </div>
 );
