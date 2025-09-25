@@ -5,13 +5,11 @@
 import type { Draft } from 'immer';
 import { generateUniqueId } from '../../../utils/id';
 // FIX: getCurrencyName is exported from utils/hydration, not utils/game.
-import { canAddItem, gameTimeToMinutes, addHoursToGameTime, getCurrencyName } from '../../../utils/game';
-import { BASE_ITEM_TEMPLATES } from '../../../constants/items';
+import { gameTimeToMinutes, getCurrencyName } from '../../../utils/game';
 import type { State, Action } from '../GameContext';
-// FIX: Import AuctionItem type for creating new auction listings.
-import type { Character, AuctionItem, AuctionState, Stat, GameAction, GameState, WorldSettings } from '../../../types';
+import type { Character, AuctionItem, AuctionState, Stat, GameState, WorldSettings } from '../../../types';
 
-const selectPotentialBidders = (gameState: GameState, worldSettings: WorldSettings, itemForAuction: Stat): string[] => {
+const selectPotentialBidders = (gameState: Draft<GameState>, worldSettings: WorldSettings, itemForAuction: Stat): string[] => {
     const currencyName = getCurrencyName(worldSettings.genre, worldSettings.setting);
     const potentialNpcs = gameState.knowledgeBase.npcs.filter(npc => {
         // Rule 1: Must be alive
@@ -54,6 +52,12 @@ const selectPotentialBidders = (gameState: GameState, worldSettings: WorldSettin
 
 export const miscReducer = (draft: Draft<State>, action: Action): void => {
     const { gameState } = draft;
+    
+    if (!gameState) {
+        // Handle error or return early if gameState is null
+        console.error('Cannot process action - gameState is null');
+        return;
+    }
 
     switch (action.type) {
         case 'PAUSE_GAME':
@@ -84,7 +88,7 @@ export const miscReducer = (draft: Draft<State>, action: Action): void => {
                 if (gameState.character.name === name) {
                     callback(gameState.character); return;
                 }
-                const npc = gameState.knowledgeBase.npcs.find(n => n.name === name);
+                const npc = gameState.knowledgeBase.npcs.find((n: Character) => n.name === name);
                 if (npc) callback(npc);
             };
 
@@ -179,7 +183,7 @@ export const miscReducer = (draft: Draft<State>, action: Action): void => {
                     } else if (moneyStat) {
                         moneyStat.value = currentBid;
                     } else {
-                        seller.stats.push({ id: generateUniqueId('stat-money'), name: currencyName, value: currentBid, category: 'Thuộc tính', description: 'Tiền tệ' });
+                        seller.stats.push({ id: generateUniqueId('stat-money'), name: currencyName, value: currentBid, category: 'Tài sản', description: 'Tiền tệ' });
                     }
                 });
             } else {

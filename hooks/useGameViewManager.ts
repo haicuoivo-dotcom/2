@@ -271,7 +271,7 @@ export const useGameViewManager = (props: GameViewManagerProps) => {
                 return s;
             });
             if (!expUpdated && expGained > 0) finalStats.push({ id: generateUniqueId('stat-exp'), name: 'Kinh Nghiệm', value: `${expGained}/100`, category: 'Thuộc tính', description: 'Điểm kinh nghiệm để lên cấp.' });
-            if (!moneyUpdated && moneyGained > 0) finalStats.push({ id: generateUniqueId('stat-money'), name: currencyName, value: moneyGained, category: 'Thuộc tính', description: 'Tiền tệ.' });
+            if (!moneyUpdated && moneyGained > 0) finalStats.push({ id: generateUniqueId('stat-money'), name: currencyName, value: moneyGained, category: 'Tài sản', description: 'Tiền tệ.' });
             
             dispatch({ type: 'UPDATE_CHARACTER', payload: { characterName: gameState.character.name, updates: { stats: finalStats } }});
         }

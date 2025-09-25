@@ -2,11 +2,11 @@
  * @license
  * SPDX-License-Identifier: Apache-2.0
 */
-import React, { useState, useMemo, useCallback, useEffect, useRef } from 'react';
+import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { FormField } from '../ui/FormField';
 import { generateUniqueId } from '../../utils/id';
 import { getCurrencyName } from '../../utils/game';
-import { INITIAL_WC_FORM_DATA, GENRE_CORE_STATS, GENRE_SETTING_MAP, STORY_TEMPLATES, PERSONALITY_TRAITS, GENRE_RELATIONSHIP_MAP, CURRENCY_UNITS, BASE_SKILL_TEMPLATES } from '../../constants/gameConstants';
+import { GENRE_CORE_STATS, PERSONALITY_TRAITS, GENRE_RELATIONSHIP_MAP, CURRENCY_UNITS, BASE_SKILL_TEMPLATES } from '../../constants/gameConstants';
 import { ITEM_SLOT_TYPES } from '../../constants/statConstants';
 import { BASE_ITEM_TEMPLATES } from '../../constants/items';
 import type { WorldSettings, Stat, InitialRelationship } from '../../types';
@@ -26,7 +26,7 @@ interface CharacterSectionProps {
     formatTime: (seconds: number) => string;
 }
 
-const CoreAttributeEditor = ({ attribute, onChange, onDelete, onUpdate }: { attribute: Stat, onChange: (id: string, field: 'name' | 'value' | 'description', value: string | number) => void, onDelete: (id: string) => void, onUpdate: (id: string, updates: Partial<Stat>) => void }) => {
+const CoreAttributeEditor = ({ attribute, onChange, onDelete }: { attribute: Stat, onChange: (id: string, field: 'name' | 'value' | 'description', value: string | number) => void, onDelete: (id: string) => void }) => {
     return (
         <div className="core-attribute-item editable" title={attribute.description}>
             <input
@@ -192,6 +192,32 @@ export const CharacterSection = ({
 
     const coreStatTabs = ['Tu Tiên', 'Võ Lâm', 'Dị Giới Fantasy', 'Hiện Đại', 'Mặc định', 'Tùy Chỉnh'];
     
+    const calculateInitialMoney = (backstory: string): number => {
+        // Nhân vật giàu có (quý tộc, thương nhân lớn, etc) - từ 5000 đến 50000
+        const richKeywords = ['quý tộc', 'hoàng tử', 'công chúa', 'thương nhân', 'thiếu gia', 'tiểu thư', 'giàu có'];
+        const richRegex = new RegExp(richKeywords.join('|'), 'i');
+        if (richRegex.test(backstory)) {
+            return Math.floor(Math.random() * 45000) + 5000;
+        }
+
+        // Nhân vật trung lưu - từ 1000 đến 5000
+        const middleClassKeywords = ['thợ thủ công', 'nông dân', 'thương nhân nhỏ', 'lái buôn', 'thầy thuốc'];
+        const middleClassRegex = new RegExp(middleClassKeywords.join('|'), 'i');
+        if (middleClassRegex.test(backstory)) {
+            return Math.floor(Math.random() * 4000) + 1000;
+        }
+
+        // Nhân vật nghèo - từ 100 đến 1000
+        const poorKeywords = ['ăn xin', 'nô lệ', 'tù nhân', 'dân đen', 'nghèo'];
+        const poorRegex = new RegExp(poorKeywords.join('|'), 'i');
+        if (poorRegex.test(backstory)) {
+            return Math.floor(Math.random() * 900) + 100;
+        }
+
+        // Mặc định - từ 500 đến 2000
+        return Math.floor(Math.random() * 1500) + 500;
+    };
+
     const handleCoreStatTabClick = (tabName: string) => {
         if (tabName === 'Tùy Chỉnh') {
             setActiveCoreStatTab('Tùy Chỉnh');
@@ -201,6 +227,34 @@ export const CharacterSection = ({
         const newCoreStatsTemplate = GENRE_CORE_STATS[tabName] || GENRE_CORE_STATS.Default;
         setFormData(prev => {
             const nonAttributeStats = (prev.stats || []).filter(s => s.category !== 'Thuộc tính');
+            const moneyStats = (prev.stats || []).find(s => s.category === 'Tài sản');
+
+            // Nếu có backstory, tính tiền dựa trên backstory
+            if (prev.backstory) {
+                const initialMoney = calculateInitialMoney(prev.backstory);
+                if (moneyStats) {
+                    // Cập nhật số tiền cho asset hiện tại
+                    const updatedMoneyStats = { ...moneyStats, value: initialMoney };
+                    return {
+                        ...prev,
+                        stats: [...newCoreStatsTemplate, ...nonAttributeStats.filter(s => s.id !== moneyStats.id), updatedMoneyStats]
+                    };
+                } else {
+                    // Tạo asset mới với số tiền tính được
+                    const newMoneyStats: Stat = {
+                        id: generateUniqueId('stat-money'),
+                        name: getCurrencyName(prev.genre, prev.setting),
+                        value: initialMoney,
+                        category: 'Tài sản',
+                        description: `Tiền tệ chính của thế giới: ${getCurrencyName(prev.genre, prev.setting)}`
+                    };
+                    return {
+                        ...prev,
+                        stats: [...newCoreStatsTemplate, ...nonAttributeStats, newMoneyStats]
+                    };
+                }
+            }
+
             return {
                 ...prev,
                 stats: [...newCoreStatsTemplate, ...nonAttributeStats]
@@ -439,7 +493,6 @@ export const CharacterSection = ({
                                     attribute={attr} 
                                     onChange={handleAttributeChange} 
                                     onDelete={handleDeleteAttribute}
-                                    onUpdate={() => {}} // dummy function
                                 />
                             ))}
                              {!isAddingAttribute && (
