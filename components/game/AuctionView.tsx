@@ -35,7 +35,7 @@ const UnmemoizedAuctionView = ({ areCheatsEnabled, onUpdateCharacterData, onOpen
     const { auctionState, character, knowledgeBase } = gameState;
     const [timeLeft, setTimeLeft] = useState(0);
     const [isEnding, setIsEnding] = useState(false);
-    const [mobileTab, setMobileTab] = useState('auction');
+    const [mobileTab, setMobileTab] = useState(() => settings.mobileMode === 'on' ? 'auction' : '');
     
     const currencyName = getCurrencyName(worldSettings.genre, worldSettings.setting);
     
@@ -101,12 +101,13 @@ const UnmemoizedAuctionView = ({ areCheatsEnabled, onUpdateCharacterData, onOpen
     ]);
     
     useEffect(() => {
+        const timeoutRef = npcBidTimeoutRef;
         if (!auctionState || !auctionState.isActive || isEnding) return;
-        if (npcBidTimeoutRef.current) clearTimeout(npcBidTimeoutRef.current);
+        if (timeoutRef.current) clearTimeout(timeoutRef.current);
 
         const shouldNpcBid = Math.random() < 0.6;
         if (shouldNpcBid) {
-            npcBidTimeoutRef.current = window.setTimeout(() => {
+            timeoutRef.current = window.setTimeout(() => {
                 if (!auctionState.isActive || isEnding) return;
                 
                 const isPlayerWinning = auctionState.highestBidder === character.name;

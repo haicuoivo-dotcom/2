@@ -30,7 +30,7 @@ export const AuctionPlayerPanel = ({ character, currencyName, onSubmitBid }: Auc
         if (money < bidAmount) {
             setBidAmount(money);
         }
-    }, [character.stats, bidAmount]);
+    }, [character.stats, bidAmount, getMoney, currencyName]);
 
     const handleBidAmountChange = (amount: number) => {
         const money = getMoney();

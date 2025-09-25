@@ -68,6 +68,20 @@ const UnmemoizedDraggableButton = ({ modalManager, onTestCombat, onTestAuction }
                 <div className={`ai-action-menu ${getMenuPositionClass()}`}>
                     <button className="ai-menu-close-button" onClick={() => setIsMenuOpen(false)} aria-label="Đóng Menu">×</button>
                     <div className="ai-menu-actions-section">
+                        {/* Quick Settings */}
+                        <button onClick={() => updateSetting('enableCheats', !settings.enableCheats)} disabled={isProcessing} title="Bật/tắt chế độ cheat, khiến mọi hành động tùy chỉnh có 100% tỷ lệ thành công." className="ai-action-menu-item">
+                            <span className="ai-action-icon"><ToggleIcon /></span>
+                            <span className="ai-action-label">{`Cheat (${settings.enableCheats ? 'Bật' : 'Tắt'})`}</span>
+                        </button>
+                        <button onClick={() => updateSetting('mobileMode', settings.mobileMode === 'on' ? 'off' : 'on')} disabled={isProcessing} title="Bật/tắt giao diện di động, tối ưu cho màn hình nhỏ." className="ai-action-menu-item">
+                            <span className="ai-action-icon"><MobileIcon /></span>
+                            <span className="ai-action-label">{`Di động (${settings.mobileMode === 'on' ? 'Bật' : 'Tắt'})`}</span>
+                        </button>
+                        <button onClick={() => updateSetting('enablePerformanceEffects', !settings.enablePerformanceEffects)} disabled={isProcessing} title="Bật/tắt các hiệu ứng đồ họa để cải thiện hiệu năng trên máy yếu." className="ai-action-menu-item">
+                            <span className="ai-action-icon"><ZapIcon /></span>
+                            <span className="ai-action-label">{`Hiệu ứng (${settings.enablePerformanceEffects ? 'Bật' : 'Tắt'})`}</span>
+                        </button>
+                        <div className="ai-menu-separator"></div>
                         {/* AI Functions */}
                         <button onClick={gameEngine.updateCharactersWithAi} disabled={isProcessing} title="Chi phí: ~1 API call. Yêu cầu AI làm mới lại mô tả, tiểu sử của các nhân vật dựa trên diễn biến gần đây." className="ai-action-menu-item">
                             <span className="ai-action-icon"><SyncIcon /></span>
@@ -111,20 +125,6 @@ const UnmemoizedDraggableButton = ({ modalManager, onTestCombat, onTestAuction }
                                 </button>
                             </>
                         )}
-                        <div className="ai-menu-separator"></div>
-                        {/* Quick Settings */}
-                         <button onClick={() => updateSetting('enableCheats', !settings.enableCheats)} disabled={isProcessing} title="Bật/tắt chế độ cheat, khiến mọi hành động tùy chỉnh có 100% tỷ lệ thành công." className="ai-action-menu-item">
-                            <span className="ai-action-icon"><ToggleIcon /></span>
-                            <span className="ai-action-label">{`Cheat (${settings.enableCheats ? 'Bật' : 'Tắt'})`}</span>
-                        </button>
-                        <button onClick={() => updateSetting('mobileMode', settings.mobileMode === 'on' ? 'off' : 'on')} disabled={isProcessing} title="Bật/tắt giao diện di động, tối ưu cho màn hình nhỏ." className="ai-action-menu-item">
-                            <span className="ai-action-icon"><MobileIcon /></span>
-                            <span className="ai-action-label">{`Di động (${settings.mobileMode === 'on' ? 'Bật' : 'Tắt'})`}</span>
-                        </button>
-                         <button onClick={() => updateSetting('enablePerformanceEffects', !settings.enablePerformanceEffects)} disabled={isProcessing} title="Bật/tắt các hiệu ứng đồ họa để cải thiện hiệu năng trên máy yếu." className="ai-action-menu-item">
-                            <span className="ai-action-icon"><ZapIcon /></span>
-                            <span className="ai-action-label">{`Hiệu ứng (${settings.enablePerformanceEffects ? 'Bật' : 'Tắt'})`}</span>
-                        </button>
                         <div className="ai-menu-separator"></div>
                         {/* Management */}
                          <button onClick={() => app.handleOpenLoadGameModal()} disabled={isProcessing} title="Mở bảng quản lý và tải game." className="ai-action-menu-item">

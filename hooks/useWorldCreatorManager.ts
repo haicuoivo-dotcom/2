@@ -19,6 +19,21 @@ import { FANFIC_CHARACTER_EXTRACTION_RULES, FANFIC_SYSTEM_ANALYSIS_RULES, STARTI
 import { FANFIC_CHARACTER_EXTRACTION_SCHEMA, FANFIC_SYSTEM_ANALYSIS_SCHEMA, STARTING_POINT_SUGGESTION_SCHEMA } from '../constants/schemas';
 import type { WorldSettings, GameState, LoreRule, FanficSystemAnalysis, PersonalityTrait } from '../types';
 
+interface FanficAnalysisItem {
+    type: string;
+    name: string;
+    description: string;
+    importance: number;
+    details?: string;
+}
+
+interface StartingPointSuggestion {
+    scene: string;
+    description: string;
+    mood: string;
+    suggestedCharacters?: string[];
+}
+
 interface WorldCreatorManagerProps {
     onCreateWorld: (gameState: GameState, worldSettings: WorldSettings) => void;
 }
@@ -55,7 +70,7 @@ export const useWorldCreatorManager = ({ onCreateWorld }: WorldCreatorManagerPro
     });
     const [isAnalyzingFanfic, setIsAnalyzingFanfic] = useState(false);
     const [fanficAnalysisTime, setFanficAnalysisTime] = useState(0);
-    const [fanficAnalysisResult, setFanficAnalysisResult] = useState<any[] | null>(null);
+    const [fanficAnalysisResult, setFanficAnalysisResult] = useState<FanficAnalysisItem[] | null>(null);
     const isMounted = useRef(true);
 
     const [isAnalyzingSystem, setIsAnalyzingSystem] = useState(false);
@@ -64,7 +79,7 @@ export const useWorldCreatorManager = ({ onCreateWorld }: WorldCreatorManagerPro
 
     // NEW State for starting point suggestions
     const [isSuggestingStartingPoints, setIsSuggestingStartingPoints] = useState(false);
-    const [startingPointSuggestions, setStartingPointSuggestions] = useState<any[] | null>(null);
+    const [startingPointSuggestions, setStartingPointSuggestions] = useState<StartingPointSuggestion[] | null>(null);
 
     useEffect(() => {
         isMounted.current = true;
@@ -357,10 +372,16 @@ export const useWorldCreatorManager = ({ onCreateWorld }: WorldCreatorManagerPro
                 const [cat, indexStr] = category.split('.');
                 const index = parseInt(indexStr, 10);
                 if (cat && !isNaN(index)) {
-                    (newAnalysis[cat as keyof FanficSystemAnalysis] as any[])[index][field] = value;
+                    const catArray = newAnalysis[cat as keyof FanficSystemAnalysis];
+                    if (Array.isArray(catArray) && catArray[index]) {
+                        catArray[index][field] = value;
+                    }
                 }
-            } else {
-                (newAnalysis[category as 'energySystem'] as any)[field] = value;
+            } else if (category in newAnalysis) {
+                const categoryObj = newAnalysis[category as keyof FanficSystemAnalysis];
+                if (categoryObj && typeof categoryObj === 'object') {
+                    (categoryObj as Record<string, string>)[field] = value;
+                }
             }
             return newAnalysis;
         });

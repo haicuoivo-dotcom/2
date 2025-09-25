@@ -187,7 +187,7 @@ export const GameView = (props: GameViewProps) => {
                 addToast(`Có ${memoriesToSummarize.length} ký ức dưới 75 điểm cần tóm tắt/gom nhóm.`, 'info');
             }
         }
-    }, [gameState?.history?.length]);
+    }, [gameState?.history?.length, gameState?.memories, addToast]);
     
     if (pendingEvent) {
         return <PreEventModal type={pendingEvent.type} onConfirm={handleConfirmEvent} onCancel={handleCancelEvent} opponentNames={pendingEvent.opponentNames} />;

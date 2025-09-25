@@ -8,7 +8,7 @@ import { generateUniqueId } from '../../utils/id';
 import { getCurrencyName } from '../../utils/game';
 import { GENRE_CORE_STATS, PERSONALITY_TRAITS, GENRE_RELATIONSHIP_MAP, CURRENCY_UNITS, BASE_SKILL_TEMPLATES } from '../../constants/gameConstants';
 import { ITEM_SLOT_TYPES } from '../../constants/statConstants';
-import { BASE_ITEM_TEMPLATES } from '../../constants/items';
+import { BASE_ITEM_TEMPLATES, type ItemTemplate } from '../../constants/items';
 import type { WorldSettings, Stat, InitialRelationship } from '../../types';
 import { ToggleSwitch } from '../ui/ToggleSwitch';
 import { AttributeEditorForm } from '../game/character-tabs/info-tab/AttributeEditorForm';
@@ -72,7 +72,13 @@ export const CharacterSection = ({
     const [customCurrencyName, setCustomCurrencyName] = useState('');
     const prevGenreAndSetting = useRef({ genre: formData.genre, setting: formData.setting });
     
-    const [activeCoreStatTab, setActiveCoreStatTab] = useState('Tùy Chỉnh');
+    const [activeCoreStatTab, setActiveCoreStatTab] = useState(() => {
+        if (formData.genre === 'Tu Tiên') return 'Tu Tiên';
+        if (formData.genre === 'Võ Hiệp') return 'Võ Lâm';
+        if (formData.genre === 'Fantasy') return 'Dị Giới Fantasy';
+        if (formData.genre === 'Hiện Đại') return 'Hiện Đại';
+        return 'Tùy Chỉnh';
+    });
     const [isAddingAttribute, setIsAddingAttribute] = useState(false);
     const [newAttribute, setNewAttribute] = useState<Partial<Stat>>({ category: 'Thuộc tính', name: '', value: 10, description: '' });
 
@@ -91,7 +97,8 @@ export const CharacterSection = ({
     }, [isCustomCurrency, assetStat?.name]);
     
     useEffect(() => {
-        const genreOrSettingChanged = prevGenreAndSetting.current.genre !== formData.genre || prevGenreAndSetting.current.setting !== formData.setting;
+        const prevRef = prevGenreAndSetting.current;
+        const genreOrSettingChanged = prevRef.genre !== formData.genre || prevRef.setting !== formData.setting;
         const expectedCurrencyName = getCurrencyName(formData.genre, formData.setting);
         const currentAssetStat = formData.stats.find(s => s.category === 'Tài sản');
     
@@ -372,15 +379,17 @@ export const CharacterSection = ({
         if (!templateName) return;
 
         const template = newStat.category === 'Vật phẩm'
-            ? (BASE_ITEM_TEMPLATES as any)[templateName]
-            : (BASE_SKILL_TEMPLATES as any)[templateName];
+            ? BASE_ITEM_TEMPLATES[templateName]
+            : BASE_SKILL_TEMPLATES[templateName as keyof typeof BASE_SKILL_TEMPLATES];
 
         if (template) {
             setNewStat(prev => ({
                 ...prev,
                 ...template,
                 name: template.name || templateName,
-                description: (template as any).baseDescription || template.description,
+                description: 'baseDescription' in template
+                    ? (template as ItemTemplate).baseDescription
+                    : (template as Stat).description || '',
             }));
         }
         e.target.value = ''; // Reset dropdown after selection
