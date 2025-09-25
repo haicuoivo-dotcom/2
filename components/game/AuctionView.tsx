@@ -6,8 +6,7 @@ import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { useGameContext } from '../contexts/GameContext';
 import { useToasts } from '../contexts/ToastContext';
 import { useSettings } from '../contexts/SettingsContext';
-// FIX: getCurrencyName is exported from utils/hydration, not utils/game.
-import { gameTimeToMinutes, formatCurrency, getCurrencyName } from '../../utils/game';
+import { formatCurrency, getCurrencyName } from '../../utils/game';
 import { AuctionItemPanel } from './AuctionItemPanel';
 import { AuctionPlayerPanel } from './AuctionPlayerPanel';
 import { AuctionNpcPanel } from './AuctionNpcPanel';
@@ -91,7 +90,15 @@ const UnmemoizedAuctionView = ({ areCheatsEnabled, onUpdateCharacterData, onOpen
             if (timerRef.current) clearInterval(timerRef.current);
             if (npcBidTimeoutRef.current) clearTimeout(npcBidTimeoutRef.current);
         };
-    }, [auctionState, dispatch, isEnding, addToast, character.name, currencyName, worldSettings]);
+    }, [
+        auctionState, 
+        dispatch, 
+        isEnding, 
+        addToast, 
+        character.name, 
+        worldSettings.genre, 
+        worldSettings.setting
+    ]);
     
     useEffect(() => {
         if (!auctionState || !auctionState.isActive || isEnding) return;
@@ -126,7 +133,17 @@ const UnmemoizedAuctionView = ({ areCheatsEnabled, onUpdateCharacterData, onOpen
             }, Math.random() * 4000 + 1500);
         }
 
-    }, [auctionState, character.name, knowledgeBase.npcs, dispatch, isEnding, currencyName]);
+    }, [
+        auctionState?.isActive,
+        auctionState?.currentBid,
+        auctionState?.highestBidder,
+        auctionState?.potentialBidders,
+        character.name,
+        knowledgeBase.npcs,
+        dispatch,
+        isEnding,
+        currencyName
+    ]);
 
     const handlePlaceBid = (bidAmount: number) => {
         dispatch({ type: 'PLACE_BID', payload: { bidAmount, bidderName: character.name } });
@@ -192,7 +209,7 @@ const UnmemoizedAuctionView = ({ areCheatsEnabled, onUpdateCharacterData, onOpen
                 <AuctionPlayerPanel 
                     character={character} 
                     currencyName={currencyName} 
-                    onPlaceBid={handlePlaceBid} 
+                    onSubmitBid={handlePlaceBid} 
                     isEnding={isEnding}
                     currentBid={currentBid}
                     playerMoney={playerMoney}
@@ -284,7 +301,7 @@ const UnmemoizedAuctionView = ({ areCheatsEnabled, onUpdateCharacterData, onOpen
                      <AuctionPlayerPanel 
                         character={character} 
                         currencyName={currencyName} 
-                        onPlaceBid={handlePlaceBid} 
+                        onSubmitBid={handlePlaceBid} 
                         isEnding={isEnding}
                         currentBid={currentBid}
                         playerMoney={playerMoney}

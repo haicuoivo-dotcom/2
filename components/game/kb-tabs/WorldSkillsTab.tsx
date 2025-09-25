@@ -2,7 +2,7 @@
  * @license
  * SPDX-License-Identifier: Apache-2.0
 */
-import React, { useMemo, useState, useEffect, useCallback } from 'react';
+import { useMemo, useState, useEffect, useCallback } from 'react';
 import { useGameContext } from '../../contexts/GameContext';
 import { useSettings } from '../../contexts/SettingsContext';
 import { NoInfoPlaceholder } from '../../ui/NoInfoPlaceholder';
@@ -12,12 +12,10 @@ import { extractJsonFromString, stripThinkingBlock } from '../../../utils/text';
 import { generateUniqueId } from '../../../utils/id';
 import { WORLD_SKILLS_GENERATION_SCHEMA } from '../../../constants/schemas';
 import { CREATION_RULES_WORLD_SKILLS } from '../../../constants/aiConstants';
-import type { Character, Stat } from '../../../types';
+import type { Stat } from '../../../types';
 import './WorldSkillsTab.css';
 
 interface WorldSkillsTabProps {
-    onEntityClick: (event: React.MouseEvent, name: string, type: string) => void;
-    // FIX: Add missing props for toast and API count.
     addToast: (message: string, type?: 'info' | 'success' | 'error' | 'warning', details?: any) => void;
     incrementApiRequestCount: () => void;
 }
@@ -35,7 +33,7 @@ const categorizeSkill = (skill: Stat): string => {
     return 'Khác';
 };
 
-export const WorldSkillsTab = ({ onEntityClick, addToast, incrementApiRequestCount }: WorldSkillsTabProps) => {
+export const WorldSkillsTab = ({ addToast, incrementApiRequestCount }: WorldSkillsTabProps) => {
     const { gameState, worldSettings, dispatch } = useGameContext();
     const { settings } = useSettings();
 
@@ -92,7 +90,7 @@ export const WorldSkillsTab = ({ onEntityClick, addToast, incrementApiRequestCou
         return order.filter(cat => filteredAndCategorizedSkills[cat] && filteredAndCategorizedSkills[cat].length > 0);
     }, [filteredAndCategorizedSkills]);
 
-    const [activeTab, setActiveTab] = useState(orderedCategories[0] || '');
+    const [activeTab, setActiveTab] = useState(() => orderedCategories[0] || '');
 
     useEffect(() => {
         if (orderedCategories.length > 0 && !orderedCategories.includes(activeTab)) {

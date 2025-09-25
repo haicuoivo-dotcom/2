@@ -8,6 +8,12 @@ interface AuctionPlayerPanelProps {
     character: Character;
     currencyName: string; 
     onSubmitBid: (amount: number) => void;
+    isEnding: boolean;
+    currentBid: number;
+    playerMoney: number;
+    areCheatsEnabled: boolean;
+    onUpdateCharacterData: (characterId: string, updates: Partial<Character>) => void;
+    addToast: (message: string, type?: 'info' | 'success' | 'warning' | 'error') => void;
 }
 
 export const AuctionPlayerPanel = ({ character, currencyName, onSubmitBid }: AuctionPlayerPanelProps) => {

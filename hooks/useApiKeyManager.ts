@@ -48,7 +48,7 @@ export const useApiKeyManager = ({ onClose, onKeysUpdated }: UseApiKeyManagerPro
         return () => {
             window.removeEventListener('systemKeyAuthFailure', handleSystemKeyFailure);
         };
-    }, []); // Empty dependency array ensures this runs only once on mount.
+    }, [setSystemApiKeyStatus]); // Add dependency for state setter
 
     useEffect(() => {
         const loadedGeminiKeys = ApiKeyManager.getKeys().map(key => ({ id: generateUniqueId('gemini-key'), key, isVisible: false, status: 'unchecked' as const }));

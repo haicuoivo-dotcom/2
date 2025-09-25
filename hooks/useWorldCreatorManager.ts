@@ -17,16 +17,15 @@ import { getApiErrorMessage } from '../utils/error';
 import { extractJsonFromString, stripThinkingBlock } from '../utils/text';
 import { FANFIC_CHARACTER_EXTRACTION_RULES, FANFIC_SYSTEM_ANALYSIS_RULES, STARTING_POINT_SUGGESTION_RULES } from '../constants/aiConstants';
 import { FANFIC_CHARACTER_EXTRACTION_SCHEMA, FANFIC_SYSTEM_ANALYSIS_SCHEMA, STARTING_POINT_SUGGESTION_SCHEMA } from '../constants/schemas';
-import type { WorldSettings, GameState, LoreRule, FanficSystemAnalysis, PersonalityTrait } from '../../types';
+import type { WorldSettings, GameState, LoreRule, FanficSystemAnalysis, PersonalityTrait } from '../types';
 
 interface WorldCreatorManagerProps {
-    onBack: () => void;
     onCreateWorld: (gameState: GameState, worldSettings: WorldSettings) => void;
 }
 
 const FANFIC_TEXT_LIMIT = 200 * 1024; // 200KB limit
 
-export const useWorldCreatorManager = ({ onBack, onCreateWorld }: WorldCreatorManagerProps) => {
+export const useWorldCreatorManager = ({ onCreateWorld }: WorldCreatorManagerProps) => {
     const { addToast } = useToasts();
     const { incrementApiRequestCount } = useAppContext();
     
@@ -57,13 +56,11 @@ export const useWorldCreatorManager = ({ onBack, onCreateWorld }: WorldCreatorMa
     const [isAnalyzingFanfic, setIsAnalyzingFanfic] = useState(false);
     const [fanficAnalysisTime, setFanficAnalysisTime] = useState(0);
     const [fanficAnalysisResult, setFanficAnalysisResult] = useState<any[] | null>(null);
-    const analysisTimerRef = useRef<number | null>(null);
     const isMounted = useRef(true);
 
     const [isAnalyzingSystem, setIsAnalyzingSystem] = useState(false);
     const [systemAnalysisTime, setSystemAnalysisTime] = useState(0);
     const [fanficSystemAnalysis, setFanficSystemAnalysis] = useState<FanficSystemAnalysis | null>(formData.fanficSystemAnalysis || null);
-    const systemAnalysisTimerRef = useRef<number | null>(null);
 
     // NEW State for starting point suggestions
     const [isSuggestingStartingPoints, setIsSuggestingStartingPoints] = useState(false);
@@ -100,34 +97,24 @@ export const useWorldCreatorManager = ({ onBack, onCreateWorld }: WorldCreatorMa
     useEffect(() => {
         if (isAnalyzingFanfic) {
             setFanficAnalysisTime(0);
-            analysisTimerRef.current = window.setInterval(() => {
-                if (isMounted.current) {
-                    setFanficAnalysisTime(prev => prev + 1);
-                }
+            const timer = window.setInterval(() => {
+                setFanficAnalysisTime(prev => prev + 1);
             }, 1000);
-        } else {
-            if (analysisTimerRef.current) clearInterval(analysisTimerRef.current);
+            
+            return () => clearInterval(timer);
         }
-        return () => {
-            if (analysisTimerRef.current) clearInterval(analysisTimerRef.current);
-        };
-    }, [isAnalyzingFanfic]);
+    }, [isAnalyzingFanfic, setFanficAnalysisTime]);
 
      useEffect(() => {
         if (isAnalyzingSystem) {
             setSystemAnalysisTime(0);
-            systemAnalysisTimerRef.current = window.setInterval(() => {
-                if (isMounted.current) {
-                    setSystemAnalysisTime(prev => prev + 1);
-                }
+            const timer = window.setInterval(() => {
+                setSystemAnalysisTime(prev => prev + 1);
             }, 1000);
-        } else {
-            if (systemAnalysisTimerRef.current) clearInterval(systemAnalysisTimerRef.current);
+            
+            return () => clearInterval(timer);
         }
-        return () => {
-            if (systemAnalysisTimerRef.current) clearInterval(systemAnalysisTimerRef.current);
-        };
-    }, [isAnalyzingSystem]);
+    }, [isAnalyzingSystem, setSystemAnalysisTime]);
 
     const handleSuggestStartingPoints = useCallback(async (content: string) => {
         if (!isMounted.current) return;
@@ -344,7 +331,15 @@ export const useWorldCreatorManager = ({ onBack, onCreateWorld }: WorldCreatorMa
     }, [setFormData, addToast, setFanficContent, setError, setFanficCharOption, setIsQuickCreate]);
 
     const handleLoreSave = (newLoreRules: Omit<LoreRule, 'id'>[]) => {
-        setFormData(prev => ({ ...prev, loreRules: newLoreRules.map(rule => ({ ...rule, id: generateUniqueId('rule') })) }));
+        setFormData(prev => ({ 
+            ...prev, 
+            loreRules: newLoreRules.map(rule => ({ 
+                ...rule, 
+                id: generateUniqueId('rule'),
+                isActive: true,
+                text: rule.text
+            })) 
+        }));
         addToast("Luật lệ đã được cập nhật.", 'success');
     };
     
@@ -353,15 +348,17 @@ export const useWorldCreatorManager = ({ onBack, onCreateWorld }: WorldCreatorMa
         field: 'name' | 'description',
         value: string
     ) => {
-        setFanficSystemAnalysis(prev => {
+        setFanficSystemAnalysis((prev: FanficSystemAnalysis | null) => {
             if (!prev) return null;
             
             const newAnalysis = JSON.parse(JSON.stringify(prev)); // Deep copy
 
-            if (category.includes('.')) {
+            if (typeof category === 'string' && category.includes('.')) {
                 const [cat, indexStr] = category.split('.');
                 const index = parseInt(indexStr, 10);
-                (newAnalysis[cat as keyof FanficSystemAnalysis] as any[])[index][field] = value;
+                if (cat && !isNaN(index)) {
+                    (newAnalysis[cat as keyof FanficSystemAnalysis] as any[])[index][field] = value;
+                }
             } else {
                 (newAnalysis[category as 'energySystem'] as any)[field] = value;
             }
