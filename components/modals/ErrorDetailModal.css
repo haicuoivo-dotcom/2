@@ -19,6 +19,40 @@
     line-height: 1;
 }
 
+.suggestions-list {
+    text-align: left;
+    margin: 1rem 0;
+    padding-left: 1.5rem;
+    color: var(--text-hint);
+}
+
+.suggestions-list li {
+    margin-bottom: 0.5rem;
+}
+
+.suggestions-list li::marker {
+    content: "💡 ";
+}
+
+.diagnostic-info {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+}
+
+.diagnostic-info h6 {
+    margin-bottom: 0.5rem;
+    color: var(--text-hint);
+}
+
+.diagnostic-info pre {
+    font-size: 0.85rem;
+    background-color: var(--background-light);
+    padding: 0.5rem;
+    border-radius: 4px;
+    color: var(--text-hint);
+}
+
 .error-detail-body h4 {
     margin: 0;
     font-size: 1.5rem;

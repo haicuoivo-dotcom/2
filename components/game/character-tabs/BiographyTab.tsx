@@ -6,14 +6,12 @@ import React, { useState } from 'react';
 import { InlineStoryRenderer } from '../StoryRenderer';
 import { useGameContext } from '../../contexts/GameContext';
 import { PencilIcon } from '../../ui/Icons';
-import type { Character, GameState, PersonalityTrait } from '../../../types';
+import type { Character, PersonalityTrait } from '../../../types';
 import { NoInfoPlaceholder } from '../../ui/NoInfoPlaceholder';
 import './PersonalityTab.css';
 
 interface BiographyTabProps {
     character: Character;
-    isPlayerCharacter: boolean;
-    onEntityClick: (event: React.MouseEvent, name: string, type: string) => void;
     onUpdateCharacterData: (characterId: string, updates: Partial<Character>) => void;
     enableCheats: boolean;
     onSetEquippedTitle: (titleId: string) => void;
@@ -67,8 +65,6 @@ const EditableField = ({ content, onSave, enableCheats, fieldName }: { content: 
 
 export const BiographyTab = ({
     character,
-    isPlayerCharacter,
-    onEntityClick,
     onUpdateCharacterData,
     enableCheats,
     onSetEquippedTitle,
@@ -107,15 +103,6 @@ export const BiographyTab = ({
                 />
             </div>
 
-            <div className="char-detail-section">
-                <h4 className="section-title-bar">Trang phục Hiện tại</h4>
-                <EditableField
-                    content={character.currentOutfit}
-                    onSave={(value) => handleUpdateField('currentOutfit', value)}
-                    enableCheats={enableCheats}
-                    fieldName="currentOutfit"
-                />
-            </div>
             
             <div className="char-detail-section">
                 <h4 className="section-title-bar">Danh hiệu</h4>

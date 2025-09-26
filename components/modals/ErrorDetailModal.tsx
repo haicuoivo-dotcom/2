@@ -2,8 +2,9 @@
  * @license
  * SPDX-License-Identifier: Apache-2.0
 */
-import React, { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Modal } from '../ui/Modal';
+import { diagnoseError, attemptRecovery, GameError, ErrorType } from '../../utils/error';
 import './ErrorDetailModal.css';
 
 interface ErrorDetailModalProps {
@@ -16,7 +17,7 @@ interface ErrorDetailModalProps {
 const formatErrorForDisplay = (error: any): string => {
     const getCircularReplacer = () => {
         const seen = new WeakSet();
-        return (key: string, value: any) => {
+        return (_key: string, value: any) => {
             if (typeof value === "object" && value !== null) {
                 if (seen.has(value)) {
                     return "[Circular Reference]";
@@ -32,6 +33,7 @@ const formatErrorForDisplay = (error: any): string => {
             name: error.name,
             message: error.message,
             stack: error.stack,
+            ...(error instanceof GameError ? { context: error.context } : {})
         };
         Object.keys(error).forEach(key => {
             plainObject[key] = (error as any)[key];
@@ -43,20 +45,65 @@ const formatErrorForDisplay = (error: any): string => {
 };
 
 export const ErrorDetailModal = ({ details, onClose, onRetry, onOptimizedRetry }: ErrorDetailModalProps) => {
-    const [isTechDetailsOpen, setIsTechDetailsOpen] = useState(false);
+    const [isRecovering, setIsRecovering] = useState(false);
+    const [diagnosticReport, setDiagnosticReport] = useState<ReturnType<typeof diagnoseError> | null>(null);
+
+    useEffect(() => {
+        const error = details.error instanceof Error ? details.error : new Error(String(details.error));
+        const gameError = error instanceof GameError ? error : new GameError(
+            error.message,
+            ErrorType.UNKNOWN,
+            {
+                componentStack: error.stack,
+                requestData: details.history.length > 0 ? { history: details.history } : undefined
+            }
+        );
+        const report = diagnoseError(gameError);
+        setDiagnosticReport(report);
+    }, [details]);
+
+    const handleRetry = async () => {
+        if (!details.error || !diagnosticReport) return;
+
+        setIsRecovering(true);
+        const gameError = diagnosticReport.error instanceof GameError 
+            ? diagnosticReport.error 
+            : new GameError(diagnosticReport.error.message, ErrorType.UNKNOWN);
+
+        const recoverySuccessful = await attemptRecovery(gameError);
+        setIsRecovering(false);
+
+        if (recoverySuccessful) {
+            onRetry();
+        } else {
+            // Nếu không thể tự phục hồi, thử tối ưu
+            onOptimizedRetry();
+        }
+    };
 
     const headerContent = <h3>Lỗi Xử lý Lượt chơi</h3>;
 
     const footerContent = (
         <>
             <button className="confirmation-button cancel" onClick={onClose}>Đóng</button>
-            <button className="confirmation-button" onClick={onRetry}>Thử lại Lượt</button>
-            <button className="confirmation-button confirm-danger" onClick={onOptimizedRetry}>Tối ưu & Thử lại</button>
+            <button 
+                className="confirmation-button" 
+                onClick={handleRetry} 
+                disabled={isRecovering}
+            >
+                {isRecovering ? 'Đang thử phục hồi...' : 'Thử phục hồi & Thử lại'}
+            </button>
+            <button 
+                className="confirmation-button confirm-danger" 
+                onClick={onOptimizedRetry}
+                disabled={isRecovering}
+            >
+                Tối ưu & Thử lại
+            </button>
         </>
     );
 
     return (
-        // FIX: Moved content inside Modal to provide 'children' prop.
         <Modal
             onClose={onClose}
             header={headerContent}
@@ -66,8 +113,17 @@ export const ErrorDetailModal = ({ details, onClose, onRetry, onOptimizedRetry }
         >
             <div className="error-detail-body">
                 <div className="error-icon">⚠️</div>
-                <h4>Đã xảy ra lỗi không thể phục hồi</h4>
-                <p>AI đã cố gắng xử lý yêu cầu của bạn nhiều lần nhưng không thành công. Bạn có thể thử lại, hoặc thử "Tối ưu & Thử lại" để AI tóm tắt bối cảnh trước khi thực hiện.</p>
+                <h4>Đã xảy ra lỗi{diagnosticReport && ` - ${diagnosticReport.context.type}`}</h4>
+                
+                <p>AI đã cố gắng xử lý yêu cầu của bạn nhiều lần nhưng không thành công. Bạn có thể:</p>
+                
+                {diagnosticReport && (
+                    <ul className="suggestions-list">
+                        {diagnosticReport.suggestions.map((suggestion, index) => (
+                            <li key={index}>{suggestion}</li>
+                        ))}
+                    </ul>
+                )}
 
                 <div className="error-process-log">
                     <h5>Quá trình xử lý:</h5>
@@ -77,14 +133,20 @@ export const ErrorDetailModal = ({ details, onClose, onRetry, onOptimizedRetry }
                         ))}
                          <li key="final-error" className="log-entry error">
                             <strong>Lỗi cuối cùng:</strong> {String(details.error)}
-                        </li>
+                         </li>
                     </ul>
                 </div>
 
-                <details className="tech-details-collapsible" onToggle={(e) => setIsTechDetailsOpen((e.target as any).open)}>
+                <details className="tech-details-collapsible">
                     <summary>Chi tiết Kỹ thuật</summary>
                     <div className="tech-details-content">
                         <pre>{formatErrorForDisplay(details.error)}</pre>
+                        {diagnosticReport && (
+                            <div className="diagnostic-info">
+                                <h6>Thông tin Chẩn đoán:</h6>
+                                <pre>{JSON.stringify(diagnosticReport.context, null, 2)}</pre>
+                            </div>
+                        )}
                     </div>
                 </details>
             </div>

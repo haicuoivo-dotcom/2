@@ -5,7 +5,6 @@
 import { useCallback, useEffect } from 'react';
 import './GameView.css';
 import { GameModals } from '../game/GameModals';
-// FIX: Changed import path to use the refactored CombatView component.
 import { CombatView } from '../game/CombatView';
 import { AuctionView } from '../game/AuctionView';
 import { GameHeader } from '../game/GameHeader';
@@ -20,20 +19,20 @@ import { TokenLimitModal } from '../modals/TokenLimitModal';
 import { ErrorDetailModal } from '../modals/ErrorDetailModal';
 import { useGameViewManager } from '../../hooks/useGameViewManager';
 import { useModalManager } from '../../hooks/useModalManager';
-import { GameEngineProvider } from '../contexts/GameEngineContext';
-// FIX: Add useGameContext to access state and dispatch for the new local function.
 import { useGameContext } from '../contexts/GameContext';
-// FIX: Add utility imports for the new local function.
+import { GameEngineProvider } from '../contexts/GameEngineContext';
 import { formatCurrency, getCurrencyName } from '../../utils/game';
 import { generateUniqueId } from '../../utils/id';
-// FIX: Add PostEventSummary to the type imports.
 import type { GameState, WorldSettings, PostEventSummary } from '../../types';
+
+import { AsyncGameHandler } from '../../types/gameHandlers';
 
 interface GameViewProps {
     onNavigateToMenu: () => void;
     onSaveGame: (gameState: GameState, worldSettings: WorldSettings) => void;
     onOpenLoadGameModal: () => void;
     modalManager: ReturnType<typeof useModalManager>;
+    handleEmergencyTokenReductionAndRetry: AsyncGameHandler;
     // FIX: Add missing props for toast and API count to pass down to modals.
     addToast: (message: string, type?: 'info' | 'success' | 'error' | 'warning', details?: any) => void;
     incrementApiRequestCount: () => void;
@@ -42,50 +41,50 @@ interface GameViewProps {
 export const GameView = (props: GameViewProps) => {
     // ...existing code...
     // ...existing code...
-    const { modalManager, onNavigateToMenu, addToast, incrementApiRequestCount } = props;
+    const { addToast, modalManager, onNavigateToMenu, incrementApiRequestCount } = props;
     const { gameState: contextGameState, worldSettings, dispatch } = useGameContext();
 
     // Luôn lấy gameViewManager từ useGameViewManager
     const gameViewManager = useGameViewManager(props);
     const {
         gameState,
-        settings,
-        gameBodyRef,
         gameEngine,
         gameActions,
-        isProcessing,
-        isCombatActive,
-        isAuctionActive,
-        scrollToBottom,
-        handleNavClick,
-        turnsToDisplay,
-        handleTestAuction,
-        postEventSummary,
         handleCloseSummary,
-        pendingEvent,
-        handleConfirmEvent,
-        handleCancelEvent,
-        skippedEvent,
-        handleOpenSkippedEvent,
+        handleNavClick,
         handlePause,
         handleResume,
-        handleSurrender,
-        handleTestCombat,
-        isTokenLimitError,
-        handleEmergencyTokenReductionAndRetry,
+        handleConfirmEvent,
+        handleCancelEvent,
+        pendingEvent,
+        postEventSummary,
+        settings,
         processingError,
         clearProcessingError,
+        handleEmergencyTokenReductionAndRetry,
+        isTokenLimitError,
+        handleSurrender,
+        isCombatActive,
+        isAuctionActive,
+        gameBodyRef,
+        turnsToDisplay,
+        scrollToBottom,
+        isProcessing,
+        handleTestCombat,
+        handleTestAuction,
+        skippedEvent,
+        handleOpenSkippedEvent,
     } = gameViewManager;
 
     const {
+        isHeaderCollapsed,
+        setIsHeaderCollapsed,
+        setIsMobileNavOpen,
         isMobileNavOpen,
         isFooterVisible,
-        isHeaderCollapsed,
-        setIsMobileNavOpen,
         setIsFooterVisible,
-        setIsHeaderCollapsed,
         openModal
-    } = modalManager;
+    } = modalManager || {};
 
     // LOG DEBUG GIÁ TRỊ TRUYỀN VÀO GAMEHEADER
     // Đặt sau khi đã khai báo các biến callback
@@ -95,33 +94,71 @@ export const GameView = (props: GameViewProps) => {
     // This function was likely defined in useGameViewManager but not exported.
     const handleContinueAfterEvent = useCallback(async (summary: PostEventSummary): Promise<void> => {
         if (!contextGameState || !worldSettings) return;
+
         if (summary.type === 'combat' && summary.data.status === 'victory') {
             const { expGained, moneyGained, itemsGained } = summary.data;
-            const newStats = [...contextGameState.character.stats];
-            newStats.push(...itemsGained);
-            let expUpdated = false;
-            let moneyUpdated = false;
             const currencyName = getCurrencyName(worldSettings.genre, worldSettings.setting);
-            const finalStats = newStats.map(s => {
+
+            // Tạo bản sao của stats để tránh mutation trực tiếp
+            const baseStats = [...contextGameState.character.stats];
+            
+            // Tìm và cập nhật exp/money hiện có
+            const hasExp = baseStats.some(s => s.name === 'Kinh Nghiệm');
+            const hasMoney = baseStats.some(s => s.name === currencyName);
+
+            // Tối ưu updates bằng cách tính toán một lần
+            const updatedStats = baseStats.map(s => {
                 if (s.name === 'Kinh Nghiệm') {
-                    const currentValue = typeof s.value === 'string' ? parseInt(s.value.split('/')[0], 10) : (s.value as number | undefined) || 0;
-                    const max = typeof s.value === 'string' ? s.value.split('/')[1] : '100';
-                    expUpdated = true;
-                    return { ...s, value: `${currentValue + expGained}/${max}` };
+                    const [current, max] = (typeof s.value === 'string' ? s.value.split('/') : [String(s.value), '100']);
+                    return { ...s, value: `${parseInt(current, 10) + expGained}/${max}` };
                 }
                 if (s.name === currencyName) {
-                    moneyUpdated = true;
                     return { ...s, value: (s.value as number || 0) + moneyGained };
                 }
                 return s;
             });
-            if (!expUpdated && expGained > 0) finalStats.push({ id: generateUniqueId('stat-exp'), name: 'Kinh Nghiệm', value: `${expGained}/100`, category: 'Thuộc tính', description: 'Điểm kinh nghiệm để lên cấp.' });
-            if (!moneyUpdated && moneyGained > 0) finalStats.push({ id: generateUniqueId('stat-money'), name: currencyName, value: moneyGained, category: 'Tài sản', description: 'Tiền tệ.' });
+
+            // Tạo stats mới với category đúng kiểu
+            const newExpStat = !hasExp && expGained > 0 ? [{
+                id: generateUniqueId('stat-exp'),
+                name: 'Kinh Nghiệm' as const,
+                value: `${expGained}/100`,
+                category: 'Thuộc tính' as const,
+                description: 'Điểm kinh nghiệm để lên cấp.'
+            }] : [];
+
+            const newMoneyStat = !hasMoney && moneyGained > 0 ? [{
+                id: generateUniqueId('stat-money'),
+                name: currencyName,
+                value: moneyGained,
+                category: 'Tài sản' as const,
+                description: 'Tiền tệ.'
+            }] : [];
+
+            // Kết hợp tất cả stats và cập nhật character
             if (dispatch && contextGameState.character) {
-                dispatch({ type: 'UPDATE_CHARACTER', payload: { characterName: contextGameState.character.name, updates: { stats: finalStats } }});
+                const combinedStats = [
+                    ...updatedStats,
+                    ...itemsGained,
+                    ...newExpStat,
+                    ...newMoneyStat
+                ];
+                
+                dispatch({
+                    type: 'UPDATE_CHARACTER',
+                    payload: {
+                        characterName: contextGameState.character.name,
+                        updates: { stats: combinedStats }
+                    }
+                });
             }
+            // State updates đã được chuyển vào phần xử lý ở trên
         }
+
+        // Đóng modal summary
         if (typeof handleCloseSummary === 'function') handleCloseSummary();
+
+        // Tạo prompt cho AI tiếp tục
         let summaryText = '';
         if (summary.type === 'combat') {
             const data = summary.data;
@@ -131,8 +168,10 @@ export const GameView = (props: GameViewProps) => {
                 summaryText = 'Trận chiến vừa kết thúc với thất bại.';
             }
         }
+
+        // Xử lý lượt tiếp theo
         const prompt = `Sự kiện vừa kết thúc. Tóm tắt: ${summaryText}. Viết diễn biến tiếp theo và đề xuất hành động mới.`;
-        if (gameEngine && typeof gameEngine.processTurn === 'function') {
+        if (gameEngine?.processTurn) {
             await gameEngine.processTurn({ id: 'ai_continue_event', description: prompt }, true);
         }
     }, [handleCloseSummary, gameEngine, worldSettings, contextGameState, dispatch]);
@@ -144,13 +183,24 @@ export const GameView = (props: GameViewProps) => {
         addToast('Thực thể đã được đổi tên.', 'success');
     }, [dispatch, addToast]);
     
+    // Các handlers cho token limit error
+    // Wrap async handler
+    const wrappedEmergencyRetry = useCallback(async () => {
+        try {
+            await Promise.resolve(handleEmergencyTokenReductionAndRetry());
+        } catch (error) {
+            addToast('Lỗi khi thử lại: ' + (error instanceof Error ? error.message : 'Lỗi không xác định'), 'error');
+        }
+    }, [handleEmergencyTokenReductionAndRetry, addToast]);
+
+    // Handlers cho UI navigation
+    const handleToggleHeaderCollapse = useCallback(() => {
+        setIsHeaderCollapsed((p: boolean) => !p);
+    }, [setIsHeaderCollapsed]);
+
     const handleMobileNavOpen = useCallback(() => {
         setIsMobileNavOpen(true);
     }, [setIsMobileNavOpen]);
-
-    const handleToggleHeaderCollapse = useCallback(() => {
-        setIsHeaderCollapsed(p => !p);
-    }, [setIsHeaderCollapsed]);
 
     const handleAuctionPauseToggle = useCallback(() => {
         if (gameState && gameState.isPaused) {
@@ -159,34 +209,28 @@ export const GameView = (props: GameViewProps) => {
             if (typeof handlePause === 'function') handlePause();
         }
     }, [gameState, handlePause, handleResume]);
-
-    // LOG trạng thái AI processing
-    console.log('AI processing (gameEngine.isAITurnProcessing):', gameEngine.isAITurnProcessing);
-
-    // LOG DEBUG GIÁ TRỊ TRUYỀN VÀO GAMEHEADER
-    console.log('DEBUG GameHeader props:', {
-        isHeaderCollapsed,
-        handleToggleHeaderCollapse,
-        handleNavClick,
-        handleMobileNavOpen,
-        handleRevertToPreviousTurn: gameActions.handleRevertToPreviousTurn,
-        handlePause,
-        handleResume,
-        gameEngine_isAITurnProcessing: gameEngine.isAITurnProcessing
-    });
-    
     // Bỏ điều kiện return khi !gameState, luôn render giao diện game
     // Tự động tóm tắt/gom nhóm ký ức dưới 75 điểm mỗi 50 lượt chơi
     useEffect(() => {
-        if (!gameState || !gameState.history) return;
-        const turnCount = gameState.history.length;
-        if (turnCount > 0 && turnCount % 50 === 0) {
-            const memoriesToSummarize = (gameState.memories || []).filter(m => (m.relevanceScore || 0) < 75);
-            if (memoriesToSummarize.length > 0) {
-                // TODO: Thực hiện tóm tắt/gom nhóm ký ức ở đây (ví dụ: gửi lên API hoặc dispatch action)
-                addToast(`Có ${memoriesToSummarize.length} ký ức dưới 75 điểm cần tóm tắt/gom nhóm.`, 'info');
+        let isMounted = true;
+        
+        const summarizeMemories = async () => {
+            if (!gameState || !gameState.history) return;
+            const turnCount = gameState.history.length;
+            if (turnCount > 0 && turnCount % 50 === 0) {
+                const memoriesToSummarize = (gameState.memories || []).filter(m => (m.relevanceScore || 0) < 75);
+                if (memoriesToSummarize.length > 0 && isMounted) {
+                    // TODO: Thực hiện tóm tắt/gom nhóm ký ức ở đây (ví dụ: gửi lên API hoặc dispatch action)
+                    addToast(`Có ${memoriesToSummarize.length} ký ức dưới 75 điểm cần tóm tắt/gom nhóm.`, 'info');
+                }
             }
-        }
+        };
+
+        summarizeMemories();
+        
+        return () => {
+            isMounted = false;
+        };
     }, [gameState?.history?.length, gameState?.memories, addToast]);
     
     if (pendingEvent) {
@@ -224,8 +268,8 @@ export const GameView = (props: GameViewProps) => {
                 )}
                 {settings.showCombatView && isTokenLimitError && (
                     <TokenLimitModal 
-                        onRetry={async () => { await handleEmergencyTokenReductionAndRetry(); }}
-                        onClose={() => gameEngine.setError(null)}
+                        onRetry={handleEmergencyTokenReductionAndRetry}
+                        onClose={useCallback(() => gameEngine.setError(null), [gameEngine])}
                     />
                 )}
                 {settings.showCombatView && gameState.isPaused && (
