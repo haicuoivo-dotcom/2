@@ -14,7 +14,7 @@ import { buildBasePrompt } from '../utils/ai';
 import { DIRECTIVE_BASED_TURN_UPDATE_SCHEMA } from '../constants/schemas';
 import { PROCESS_TURN_RULES } from '../constants/aiConstants';
 import { applyDirectives } from '../utils/game';
-import type { GameState, GameAction, Turn, Memory, GenerateContentParameters } from '../../types';
+import type { GameState, GameAction, Turn, Memory, GenerateContentParameters } from '../types';
 
 interface UsePredictiveTurnProps {
     isMounted: MutableRefObject<boolean>;
@@ -73,7 +73,7 @@ export const usePredictiveTurn = ({
                     predictedActionDescription: actionToPredict.description,
                     predictedGameState,
                     predictedTotalApiRequests: totalApiRequestsThisTurn,
-                    predictedOnStateVersion: stateForPrompt.stateVersion,
+                    predictedOnStateVersion: stateForPrompt.version || 0,
                 });
                 setPredictionStatus('predicted');
             }

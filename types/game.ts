@@ -84,7 +84,7 @@ export interface GameState {
     saveId?: string;
     title: string;
     worldSummary: string;
-    stateVersion: number;
+    version?: number;
 
     character: Character;
     knowledgeBase: KnowledgeBase;

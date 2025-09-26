@@ -2,13 +2,12 @@
  * @license
  * SPDX-License-Identifier: Apache-2.0
 */
-import { INITIAL_WC_FORM_DATA, FACTION_TYPES, GENRE_CORE_STATS, ONE_PIECE_OUTFIT_KEYWORDS } from '../constants/gameConstants';
+import { INITIAL_WC_FORM_DATA, ONE_PIECE_OUTFIT_KEYWORDS } from '../constants/gameConstants';
 import { PERSONALITY_TRAITS_LIBRARY } from '../constants/personalityTraits';
-import { INFO_TAB_COMBAT_STATS, DEFAULT_EQUIPMENT_SLOTS, STAT_HEALTH } from '../constants/statConstants';
+import { STAT_HEALTH } from '../constants/statConstants';
 import { generateUniqueId } from './id';
 import { stripEntityTags } from './text';
-import { getScaleForLocationType } from './map';
-import type { GameState, WorldSettings, Character, GameTime, Stat, Memory, MapLocation, Faction, KnowledgeEntity, MarketState, EquipmentSlot, Relationship, PersonalityTrait } from '../types';
+import type { GameState, WorldSettings, Character, GameTime, Stat, Memory, MarketState, EquipmentSlot, PersonalityTrait, Relationship } from '../types';
 
 export const DEFAULT_MARKET_STATE: MarketState = {};
 
@@ -153,7 +152,7 @@ const createDefaultActionProgress = (): Character['actionProgress'] => {
     };
 };
 
-export const hydrateCharacterData = (characterData: Partial<Character> & { description?: string, goals?: string[], keyMemories?: Memory[], money?: number, relationship?: number, motivation?: string, class?: string, occupation?: string, title?: string }, defaultData: Partial<Character>, worldSettings: WorldSettings, pcName?: string, gameTime?: GameTime): Character => {
+export const hydrateCharacterData = (characterData: Partial<Character> & { description?: string, goals?: string[], keyMemories?: Memory[], money?: number, relationship?: number, motivation?: string, class?: string, occupation?: string, title?: string }, defaultData: Partial<Character>, worldSettings: WorldSettings, gameTime?: GameTime): Character => {
     const hydrated: any = { ...DEFAULT_CHARACTER_STRUCTURE, ...defaultData, ...characterData };
     
     if (!Array.isArray(hydrated.stats)) {
@@ -178,10 +177,10 @@ export const hydrateCharacterData = (characterData: Partial<Character> & { descr
         const flatTraitLibrary = Object.values(PERSONALITY_TRAITS_LIBRARY).flat();
         const traitMapByName = new Map(flatTraitLibrary.map(t => [t.name.toLowerCase(), t]));
 
-        const traitNames = hydrated.personality.split(',').map(t => t.trim().toLowerCase());
+        const traitNames = hydrated.personality.split(',').map((t: string) => t.trim().toLowerCase());
         const structuredTraits: PersonalityTrait[] = [];
         
-        traitNames.forEach(name => {
+        traitNames.forEach((name: string) => {
             const foundTrait = traitMapByName.get(name);
             if (foundTrait) {
                 structuredTraits.push(foundTrait);
@@ -431,7 +430,7 @@ export const hydrateCharacterData = (characterData: Partial<Character> & { descr
 
 const DEFAULT_GAME_STATE: Omit<GameState, 'character' | 'knowledgeBase' | 'title' | 'worldSummary'> = {
     saveId: undefined,
-    stateVersion: 1,
+    version: 1,
     turns: [],
     actions: [],
     memories: [],
@@ -539,13 +538,12 @@ export const hydrateGameState = (gameStateData: Partial<GameState>, worldSetting
         gameStateData.character || {},
         DEFAULT_CHARACTER_STRUCTURE,
         worldSettings,
-        undefined,
         gameStateData.gameTime
     );
 
     // 2. Hydrate NPCs
     const hydratedNpcs = (gameStateData.knowledgeBase?.npcs || []).map(npcData => 
-        hydrateCharacterData(npcData, DEFAULT_CHARACTER_STRUCTURE, worldSettings, hydratedCharacter.name, gameStateData.gameTime)
+        hydrateCharacterData(npcData, DEFAULT_CHARACTER_STRUCTURE, worldSettings, gameStateData.gameTime)
     );
     
     // 3. Hydrate Factions (NEW)

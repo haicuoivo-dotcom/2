@@ -2,14 +2,13 @@
  * @license
  * SPDX-License-Identifier: Apache-2.0
 */
-import React, { useState, useEffect, useRef, useMemo } from 'react';
+import React, { useState, useRef, useMemo } from 'react';
 import { useAppContext } from '../contexts/AppContext';
 import { useGameEngineContext } from '../contexts/GameEngineContext';
 import { useGameContext } from '../contexts/GameContext';
 import { useSettings } from '../contexts/SettingsContext';
 import { useDraggable } from '../../hooks/useDraggable';
-import { ToggleRightIcon as ToggleIcon, UsersIcon, RefreshCwIcon as SyncIcon, GlobeIcon, RotateCcwIcon as UndoIcon, SmartphoneIcon as MobileIcon, ZapIcon, HelpCircleIcon as HelpIcon, FolderDownIcon as FolderIcon, PencilIcon, HammerIcon, SwordIcon, GavelIcon, RefreshCwIcon, FileClockIcon, CombineIcon, Trash2Icon } from './Icons';
-import type { AppSettings, GameState } from '../../types';
+import { ToggleRightIcon as ToggleIcon, UsersIcon, RefreshCwIcon as SyncIcon, RotateCcwIcon as UndoIcon, SmartphoneIcon as MobileIcon, ZapIcon, HelpCircleIcon as HelpIcon, FolderDownIcon as FolderIcon, PencilIcon, SwordIcon, GavelIcon, FileClockIcon, CombineIcon, Trash2Icon } from './Icons';
 import './DraggableButton.css';
 import { useModalManager } from '../../hooks/useModalManager';
 
@@ -32,7 +31,7 @@ const UnmemoizedDraggableButton = ({ modalManager, onTestCombat, onTestAuction }
     const { settings, updateSetting } = useSettings();
 
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const buttonRef = useRef<HTMLButtonElement>(null);
+    const buttonRef = useRef<HTMLButtonElement | null>(null) as React.RefObject<HTMLButtonElement>;
     const { position, isDragging, hasDragged, handleDragStart, getMenuPositionClass } = useDraggable(buttonRef);
 
     const handleButtonClick = () => {

@@ -61,6 +61,7 @@ export const rootReducer = (state: State, action: Action): State => {
                 if (action.payload < 0 || action.payload >= historyToRevert.length) {
                     return; 
                 }
+                if (!draft.gameState) return;
                 const currentTimeline = draft.gameState.timeline;
                 const revertedState = deepClone(historyToRevert[action.payload]); // Create a mutable copy
                 revertedState.timeline = currentTimeline; // Safely modify the copy
@@ -72,8 +73,7 @@ export const rootReducer = (state: State, action: Action): State => {
                 break;
         }
         
-        if (draft.gameState) {
-            draft.gameState.stateVersion = (draft.gameState.stateVersion || 0) + 1;
-        }
+        // Increment version with each state change
+        draft.version += 1;
     });
 };

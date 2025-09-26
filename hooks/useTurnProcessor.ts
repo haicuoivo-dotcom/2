@@ -20,10 +20,10 @@ import { applyDirectives, findBestAction, handleAutosave, performLocalIntegrityC
 import { getItemScore } from '../utils/inventory';
 import { updateMapData, updateMapWithRevealedLocations } from '../utils/map';
 import { SYNTHESIZED_SKILL_TEMPLATES } from '../constants/skillTemplates';
-import type { GameState, GameAction, Turn, Memory, GenerateContentParameters, Stat, WorldSettings, AppSettings, Message, Character, EquipmentSlot, TimelineBlock, LoreRule } from '../../types';
+import type { GameState, GameAction, Turn, Memory, GenerateContentParameters, Stat, Message, Character, EquipmentSlot, TimelineBlock, LoreRule, WorldSettings } from '../types';
 
 interface UseTurnProcessorProps {
-    onSaveGame: (gameState: GameState, worldSettings: any) => void;
+    onSaveGame: (gameState: GameState, worldSettings: WorldSettings) => void;
     incrementApiRequestCount: () => void;
     runPredictiveTurn: (action: GameAction, state: GameState) => Promise<void>;
     predictedTurn: any;
@@ -100,7 +100,7 @@ export const useTurnProcessor = ({
         setActionAnalysis(null);
         setRetryMessage(null);
         
-        if (predictedTurn && predictionStatus === 'predicted' && !isCustom && action.description === predictedTurn.predictedActionDescription && gameState.stateVersion === predictedTurn.predictedOnStateVersion) {
+        if (predictedTurn && predictionStatus === 'predicted' && !isCustom && action.description === predictedTurn.predictedActionDescription && (gameState.version || 0) === predictedTurn.predictedOnStateVersion) {
             const { predictedGameState, predictedTotalApiRequests } = predictedTurn;
             setPredictedTurn(null); setPredictionStatus('idle');
             for (let i = 0; i < predictedTotalApiRequests; i++) incrementApiRequestCount();

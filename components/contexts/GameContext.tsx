@@ -4,9 +4,9 @@
 */
 import React, { createContext, useContext, useReducer, ReactNode, useMemo } from 'react';
 import { rootReducer } from './reducers/rootReducer';
-import { hydrateWorldSettings, hydrateGameState } from '../../utils/hydration';
+import { hydrateWorldSettings } from '../../utils/hydration';
 import { INITIAL_WC_FORM_DATA } from '../../constants/gameConstants';
-import type { GameState, WorldSettings, Character, LoreRule, Turn, Stat, KnowledgeEntity, AuctionItem, GameTime, MapData, Faction, MapMarker, CraftingHistoryEntry, Message, Memory, GameAction, KnowledgeBase, CombatState, AuctionState, MapLocation, MarketState, OutfitSet, TimelineBlock, Relationship } from '../../types';
+import type { GameState, WorldSettings, Character, Turn, Stat, KnowledgeEntity, AuctionItem, GameTime, MapData, CraftingHistoryEntry, Memory, GameAction, KnowledgeBase, CombatState, AuctionState, MarketState, TimelineBlock, Faction, MapLocation, MapMarker, OutfitSet } from '../../types';
 
 //================================================================
 // STATE & ACTION TYPES
@@ -15,6 +15,7 @@ import type { GameState, WorldSettings, Character, LoreRule, Turn, Stat, Knowled
 export interface State {
     gameState: GameState | null; // Can be null when no game is loaded
     worldSettings: WorldSettings;
+    version: number; // Separate version tracking
 }
 
 export type Action =
@@ -77,6 +78,7 @@ export type Action =
 export const initialState: State = {
     gameState: null,
     worldSettings: hydrateWorldSettings(INITIAL_WC_FORM_DATA),
+    version: 0,
 };
 
 //================================================================
@@ -102,7 +104,7 @@ const PlayerCharacterContext = createContext<PlayerCharacterContextType | null |
 // Game Session State (frequent changes)
 interface GameSessionContextType {
     saveId?: string;
-    stateVersion: number;
+    version?: number; // Using root state version instead
     turns: Turn[];
     actions: GameAction[];
     memories: Memory[];
@@ -151,7 +153,7 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
 
     const gameSessionValue = useMemo(() => (gameState ? {
         saveId: gameState.saveId,
-        stateVersion: gameState.stateVersion,
+        version: state.version,
         turns: gameState.turns,
         actions: gameState.actions,
         memories: gameState.memories,
@@ -170,7 +172,7 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
         intercourseStep: gameState.intercourseStep,
         hasUnseenQuest: gameState.hasUnseenQuest,
     } : null), [
-        gameState?.saveId, gameState?.stateVersion, gameState?.turns, gameState?.actions, gameState?.memories, gameState?.history,
+        gameState?.saveId, state.version, gameState?.turns, gameState?.actions, gameState?.memories, gameState?.history,
         gameState?.timeline, gameState?.gameTime, gameState?.combatState, gameState?.auctionState, gameState?.isPaused,
         gameState?.totalTokenCount, gameState?.craftingHistory,
         gameState?.auctionHouse, gameState?.marketState, gameState?.playerFactionId,
@@ -243,7 +245,7 @@ export const useGameContext = (): { gameState: GameState; worldSettings: WorldSe
         // Also use type assertions to resolve 'property does not exist on unknown' errors.
         return {
             saveId: gameSession.saveId,
-            stateVersion: gameSession.stateVersion,
+            version: gameSession.version,
             turns: gameSession.turns,
             actions: gameSession.actions,
             memories: gameSession.memories,
